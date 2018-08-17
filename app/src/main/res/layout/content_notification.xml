@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/notifi_title"
+        android:textSize="20sp"
+        android:textColor="#ff55"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"/>
+    <LinearLayout
+        android:layout_below="@id/notifi_title"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        android:gravity="center">
+        <ImageView
+            android:id="@+id/notifi_prev"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:src="@drawable/ic_prev"/>
+        <ImageView
+            android:id="@+id/notifi_play"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:src="@drawable/ic_pause"/>
+        <ImageView
+            android:id="@+id/notifi_next"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:src="@drawable/ic_next"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
