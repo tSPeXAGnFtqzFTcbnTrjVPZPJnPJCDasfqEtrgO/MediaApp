@@ -9,8 +9,10 @@ public class Song {
     private String nameVi,path,artistName,albumName,nameEn;
     private String nameSearch;
     private int id,artistId,albumId;
+    private int position;
 
-    public Song(Cursor cursor) {
+    public Song(Cursor cursor,int pos) {
+        position = pos;
         nameVi = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
         nameVi = nameVi.trim();
         nameEn  = ConvertLanguage.convert(nameVi);
@@ -64,6 +66,10 @@ public class Song {
 
     public String getNameSearch() {
         return nameSearch;
+    }
+
+    public int getPosition() {
+        return position;
     }
 
 }

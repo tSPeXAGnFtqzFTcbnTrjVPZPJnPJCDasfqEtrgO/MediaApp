@@ -25,6 +25,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.Holder> {
     ArrayList<Song> songs;
     Context context;
 
+
     public SongAdapter(ArrayList<Song> songs, Context context) {
         this.songs = songs;
         this.context = context;
@@ -48,7 +49,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.Holder> {
         }
 
 
-        }
+    }
 
     @Override
     public int getItemCount() {
@@ -65,18 +66,20 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.Holder> {
             itemView.setOnClickListener(v -> {
 
                 int pos = getLayoutPosition();
+                int index = songs.get(pos).getPosition();
 
                 Intent intent  = new Intent(context, ForegroundService.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(ForegroundService.posKey,pos);
+                intent.putExtra(ForegroundService.posKey,index);
                 intent.setAction(Action.START_FORE.getName());
 
-
+                Log.d("AAA","recycler "+index );
                 context.startService(intent);
             });
 
         }
     }
+
 
 
 }

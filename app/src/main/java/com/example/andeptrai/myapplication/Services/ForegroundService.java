@@ -21,11 +21,22 @@ import com.example.andeptrai.myapplication.Instance;
 import com.example.andeptrai.myapplication.MainActivity;
 import com.example.andeptrai.myapplication.R;
 import com.example.andeptrai.myapplication.constant.Action;
+import com.example.andeptrai.myapplication.constant.ActionBroadCast;
 import com.example.andeptrai.myapplication.function.ShowLog;
+
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class ForegroundService extends Service {
 
     public final static String posKey = "abc";
+    public final static String curTimeKey = "curTimeKey";
+    public final static String totalTimeKey = "totalTimeKey";
+    public final static String nameSong = "nameSong";
+    public final static String updateProgress = "updateProgress";
 
     private final int REQUEST_CODE = 123;
     private final String CHANNEL_ID = "111";
@@ -37,10 +48,11 @@ public class ForegroundService extends Service {
     RemoteViews remoteViews = new RemoteViews(MainActivity.PACKAGE_NAME, R.layout.content_notification);
 
     Notification notifiCustom;
-    Intent prevIntent, nextIntent, noificationMainIntent, playIntent, pauseIntent, stopIntent;
-    PendingIntent mainPending, playPending, pausePending, stopPending, prevPending, nextPending;
+    Intent noificationMainIntent, playIntent, pauseIntent, stopIntent, prevIntent, nextIntent, updateProgressIntent;
+    PendingIntent mainPending, playPending, pausePending, stopPending, prevPending, nextPending, updateProgressPending;
     NotificationManager mNotificationManager;
 
+    Intent intentBroadcast;
 
     @Nullable
     @Override
@@ -49,11 +61,23 @@ public class ForegroundService extends Service {
     }
 
     @Override
+    public boolean onUnbind(Intent intent) {
+        super.onUnbind(intent);
+        return true;
+    }
+
+    @Override
+    public void onRebind(Intent intent) {
+        super.onRebind(intent);
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
 
         Log.d("AAA", "create");
         setupIntent();
+        updateTime();
     }
 
     @Override
@@ -68,6 +92,9 @@ public class ForegroundService extends Service {
 
         String action = intent.getAction();
         pos = intent.getIntExtra(posKey, pos);
+        ShowLog.logInfo("fore pos:  ", pos);
+
+        ShowLog.logInfo("action", action);
 
         if (action.compareTo(Action.START_FORE.getName()) == 0) {
 
@@ -109,6 +136,11 @@ public class ForegroundService extends Service {
             }
             pos--;
             play(pos);
+        } else if (action.equals(Action.UPDATE.getName())) {
+            if (mediaPlayer != null) {
+                int progress = intent.getIntExtra(updateProgress, mediaPlayer.getCurrentPosition());
+                mediaPlayer.seekTo(progress);
+            }
         }
 
         return START_STICKY;
@@ -126,21 +158,21 @@ public class ForegroundService extends Service {
             mediaPlayer.release();
         }
 
-        ShowLog.logInfo("path",Instance.songList.get(pos).getPath());
+        ShowLog.logInfo("path", Instance.songList.get(pos).getPath());
         int t = pos;
         do {
-            ShowLog.logInfo("fore",Instance.songList.get(pos).getNameVi());
+            ShowLog.logInfo("fore", Instance.songList.get(pos).getNameVi());
             mediaPlayer = MediaPlayer.create(this, Uri.parse(Instance.songList.get(pos).getPath()));
-            pos= (pos+1)%Instance.songList.size();
-            ShowLog.logInfo("for mp",mediaPlayer);
-        }while (mediaPlayer==null && t!=pos);
-        if(mediaPlayer!=null){
-            pos=t;
-            Log.d("a","playing");
-            remoteViews.setTextViewText(R.id.notifi_title,Instance.songList.get(pos).getNameVi());
+            pos = (pos + 1) % Instance.songList.size();
+            ShowLog.logInfo("for mp", mediaPlayer);
+        } while (mediaPlayer == null && t != pos);
+        if (mediaPlayer != null) {
+            pos = t;
+            Log.d("a", "playing");
+            remoteViews.setTextViewText(R.id.notifi_title, Instance.songList.get(pos).getNameVi());
             //remoteViews.setString(R.id.notifi_title,"",Instance.songList.get(pos).getNameVi());
 
-            mNotificationManager.notify(FORE_ID,notifiCustom);
+            mNotificationManager.notify(FORE_ID, notifiCustom);
             mediaPlayer.start();
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
@@ -153,13 +185,15 @@ public class ForegroundService extends Service {
             });
         }
     }
-    private void resume(){
-        if(mediaPlayer!=null){
+
+    private void resume() {
+        if (mediaPlayer != null) {
             mediaPlayer.start();
         }
     }
-    private void  pause(){
-        if(mediaPlayer!=null && mediaPlayer.isPlaying()){
+
+    private void pause() {
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
         }
     }
@@ -195,15 +229,20 @@ public class ForegroundService extends Service {
         nextIntent.setAction(Action.NEXT.getName());
         nextPending = PendingIntent.getService(this, REQUEST_CODE, nextIntent, 0);
 
+        updateProgressIntent = new Intent(this, ForegroundService.class);
+        updateProgressIntent.setAction(Action.UPDATE.getName());
+        updateProgressPending = PendingIntent.getService(this, REQUEST_CODE, updateProgressIntent, 0);
+
         NotificationChannel channel;
 
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
-            channel = new NotificationChannel(CHANNEL_ID,"name", NotificationManager.IMPORTANCE_HIGH);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            channel = new NotificationChannel(CHANNEL_ID, "name", NotificationManager.IMPORTANCE_HIGH);
 
             mNotificationManager.createNotificationChannel(channel);
         }
 
         notifiCustom = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher_background)
                 .setOngoing(true)
                 .setContentIntent(mainPending)
                 .build();
@@ -215,5 +254,39 @@ public class ForegroundService extends Service {
         remoteViews.setOnClickPendingIntent(R.id.notifi_play, pausePending);
 
 
+        intentBroadcast = new Intent();
+    }
+
+
+    private void updateTime() {
+        io.reactivex.Observable.interval(500, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Long>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Long aLong) {
+                        if (mediaPlayer != null) {
+                            intentBroadcast.setAction(ActionBroadCast.CURSEEK.getName());
+                            intentBroadcast.putExtra(nameSong, Instance.songList.get(pos).getNameVi());
+                            intentBroadcast.putExtra(curTimeKey, mediaPlayer.getCurrentPosition());
+                            intentBroadcast.putExtra(totalTimeKey, mediaPlayer.getDuration());
+                            sendBroadcast(intentBroadcast);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 }

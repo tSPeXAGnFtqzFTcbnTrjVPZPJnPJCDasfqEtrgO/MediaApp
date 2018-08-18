@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MyIndicatorView">
+        <attr name="indi_radius_select" format="float"/>
+        <attr name="indi_radius_unselect" format="float"/>
+
+        <attr name="indi_color_select" format="color"/>
+        <attr name="indi_color_unselect" format="color"/>
+
+        <attr name="indi_distance" format="dimension"/>
+    </declare-styleable>
+</resources>
