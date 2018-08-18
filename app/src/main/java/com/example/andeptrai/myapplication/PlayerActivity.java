@@ -9,8 +9,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.bq.markerseekbar.MarkerSeekBar;
 import com.example.andeptrai.myapplication.Services.ForegroundService;
 import com.example.andeptrai.myapplication.adapter.ViewPagerAdapter;
 import com.example.andeptrai.myapplication.constant.Action;
@@ -21,7 +25,6 @@ import com.example.andeptrai.myapplication.function.ShowLog;
 import com.example.andeptrai.myapplication.indicator.MyIndicatorView;
 import com.example.andeptrai.myapplication.indicator.PageException;
 
-import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,13 +34,12 @@ import butterknife.ButterKnife;
 
 public class PlayerActivity extends AppCompatActivity {
 
-
     @BindView(R.id.indicator)
     MyIndicatorView indicatorView;
     @BindView(R.id.view_pager)
     ViewPager viewPager;
     @BindView(R.id.seek_bar)
-    DiscreteSeekBar seekBar;
+    MarkerSeekBar seekBar;
     @BindView(R.id.txtv_duration)
     TextView txtvDuration;
     @BindView(R.id.txtv_duration_total)
@@ -51,6 +53,7 @@ public class PlayerActivity extends AppCompatActivity {
     String nameSong = "";
     int curTime = 0;
     int totalTime = 0;
+    boolean isRegister = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,7 @@ public class PlayerActivity extends AppCompatActivity {
         init();
         setUpBroadCast();
         action();
+
     }
 
     private void init() {
@@ -72,8 +76,9 @@ public class PlayerActivity extends AppCompatActivity {
         viewPager.setAdapter(pagerAdapter);
         try {
             indicatorView.setViewPager(viewPager);
-        }catch (PageException e){
-
+        } catch (PageException e) {
+            Log.e("AAA", e.getMessage());
+            e.printStackTrace();
         }
         //    tabLayout.setupWithViewPager(viewPager);
         //viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -81,28 +86,35 @@ public class PlayerActivity extends AppCompatActivity {
 
     }
     private void setUpBroadCast(){
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(ActionBroadCast.CURSEEK.getName());
-        registerReceiver(broadcastReceiver,intentFilter );
+        register();
     }
     private void action(){
-        seekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+        seekBar.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                unRegister();
+                return false;
+            }
+        });
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar _seekBar, int i, boolean b) {
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
 
             }
 
             @Override
-            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
-                seekBar.setEnabled(false);
-            }
-
-            @Override
-            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+            public void onStopTrackingTouch(SeekBar seekBar) {
                 Intent intent = new Intent(PlayerActivity.this,ForegroundService.class);
-                intent.setAction(Action.UPDATE.getName());
+                intent.setAction(Action.UPDATE.toString());
                 intent.putExtra(ForegroundService.updateProgress,seekBar.getProgress() );
-                seekBar.setEnabled(true);
+                startService(intent);
+
+                register();
+
             }
         });
     }
@@ -122,15 +134,30 @@ public class PlayerActivity extends AppCompatActivity {
                 totalTime = intent.getIntExtra(ForegroundService.totalTimeKey,totalTime );
                 curTime = intent.getIntExtra(ForegroundService.curTimeKey,curTime );
                 nameSong  = intent.getStringExtra(ForegroundService.nameSong);
-                ShowLog.logInfo("Broadcast", nameSong);
                 update();
             }
         }
     };
 
+    private void register(){
+        if(!isRegister){
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(ActionBroadCast.CURSEEK.getName());
+            registerReceiver(broadcastReceiver,intentFilter );
+            isRegister=true;
+        }
+    }
+    private void unRegister(){
+        if(isRegister){
+            unregisterReceiver(broadcastReceiver);
+            isRegister = false;
+        }
+    }
+
     @Override
     protected void onStop() {
-        unregisterReceiver(broadcastReceiver);
+        unRegister();
         super.onStop();
     }
+
 }

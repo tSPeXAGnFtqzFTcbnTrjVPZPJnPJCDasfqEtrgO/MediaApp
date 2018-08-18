@@ -57,14 +57,16 @@
                 android:textColor="#ff00"
                 android:textSize="10sp" />
 
-            <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+            <com.bq.markerseekbar.MarkerSeekBar
                 android:id="@+id/seek_bar"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="8"
-                app:dsb_max="100"
-                app:dsb_value="50"
-                app:dsb_progressColor="#ff00" />
+                android:max="100"
+                android:progress="50"
+                app:markerColor="#00ff15"
+                app:markerShadowColor="#ff00"/>
+
 
             <TextView
                 android:id="@+id/txtv_duration_total"

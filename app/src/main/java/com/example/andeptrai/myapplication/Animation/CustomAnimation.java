@@ -18,7 +18,7 @@ public class CustomAnimation {
                 "scaleY",0,1);
 
 
-        animatorRotate.setDuration(500);
+        animatorRotate.setDuration(4000);
         animatorRotate.setInterpolator(customInterpolator.getInterpolatorLinear());
         animatorY.setDuration(500);
         animatorY.setInterpolator(customInterpolator.getInterpolatorCubic());

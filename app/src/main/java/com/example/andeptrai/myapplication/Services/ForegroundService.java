@@ -156,6 +156,7 @@ public class ForegroundService extends Service {
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
             mediaPlayer.release();
+            mediaPlayer.reset();
         }
 
         ShowLog.logInfo("path", Instance.songList.get(pos).getPath());
