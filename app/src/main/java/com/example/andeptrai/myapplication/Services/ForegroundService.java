@@ -208,7 +208,6 @@ public class ForegroundService extends Service {
                     pos = Instance.songList.size();
                 }
                 pos--;
-                break;
             }
 
             if (isShuffle) {
