@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -34,6 +35,7 @@ import butterknife.ButterKnife;
 
 public class PlayerActivity extends AppCompatActivity {
 
+
     @BindView(R.id.indicator)
     MyIndicatorView indicatorView;
     @BindView(R.id.view_pager)
@@ -45,7 +47,20 @@ public class PlayerActivity extends AppCompatActivity {
     @BindView(R.id.txtv_duration_total)
     TextView txtvDurationTotal;
 
+    @BindView(R.id.btn_play)
+    ImageButton btnPlay;
+    @BindView(R.id.btn_prev)
+    ImageButton btnPrev;
+    @BindView(R.id.btn_next)
+    ImageButton btnNext;
+    @BindView(R.id.btn_shuffle)
+    ImageButton btnShuffle;
+    @BindView(R.id.btn_repeat)
+    ImageButton btnRepeat;
 
+    Intent playIntent, pauseIntent, prevIntent, nextIntent;
+    Intent updateIntent;
+    Intent shuffleIntent, repeatIntent;
     ArrayList<Fragment> fragments = new ArrayList<>();
     ViewPagerAdapter pagerAdapter;
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss");
@@ -53,7 +68,11 @@ public class PlayerActivity extends AppCompatActivity {
     String nameSong = "";
     int curTime = 0;
     int totalTime = 0;
+    int pos = 0;
     boolean isRegister = false;
+    boolean isPlaying = true;
+    boolean isShuffle = false;
+    boolean isRepeat = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +81,10 @@ public class PlayerActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         init();
+        setupIntent();
         setUpBroadCast();
+        setClick();
+
         action();
 
     }
@@ -71,6 +93,7 @@ public class PlayerActivity extends AppCompatActivity {
 
         fragments.add(new Fragment1());
         fragments.add(new Fragment2());
+
 
         pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(pagerAdapter);
@@ -85,20 +108,20 @@ public class PlayerActivity extends AppCompatActivity {
 
 
     }
-    private void setUpBroadCast(){
+
+    private void setUpBroadCast() {
         register();
     }
-    private void action(){
-        seekBar.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                unRegister();
-                return false;
-            }
+
+    private void action() {
+        seekBar.setOnTouchListener((view, motionEvent) -> {
+            unRegister();
+            return false;
         });
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar _seekBar, int i, boolean b) {
+                seekBar.getMarkerTextView().setText(simpleDateFormat.format(_seekBar.getProgress()));
             }
 
             @Override
@@ -108,10 +131,8 @@ public class PlayerActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                Intent intent = new Intent(PlayerActivity.this,ForegroundService.class);
-                intent.setAction(Action.UPDATE.toString());
-                intent.putExtra(ForegroundService.updateProgress,seekBar.getProgress() );
-                startService(intent);
+                updateIntent.putExtra(ForegroundService.UPDATE_PROGRESS, seekBar.getProgress());
+                startService(updateIntent);
 
                 register();
 
@@ -120,35 +141,84 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
 
-    private void update(){
+    private void update() {
         seekBar.setMax(totalTime);
         seekBar.setProgress(curTime);
         txtvDuration.setText(simpleDateFormat.format(curTime));
-        txtvDurationTotal.setText(simpleDateFormat.format(totalTime ));
+        txtvDurationTotal.setText(simpleDateFormat.format(totalTime));
+    }
+
+    private void setupIntent() {
+
+        playIntent = new Intent(this, ForegroundService.class);
+        playIntent.setAction(Action.PLAY.getName());
+
+        pauseIntent = new Intent(this, ForegroundService.class);
+        pauseIntent.setAction(Action.PAUSE.getName());
+
+
+        prevIntent = new Intent(this, ForegroundService.class);
+        prevIntent.setAction(Action.PREVIOUS.getName());
+
+        nextIntent = new Intent(this, ForegroundService.class);
+        nextIntent.setAction(Action.NEXT.getName());
+
+        updateIntent = new Intent(PlayerActivity.this, ForegroundService.class);
+        updateIntent.setAction(Action.UPDATE.getName());
+
+        repeatIntent = new Intent(PlayerActivity.this, ForegroundService.class);
+        repeatIntent.setAction(Action.REPEAT.getName());
+
+        shuffleIntent = new Intent(PlayerActivity.this, ForegroundService.class);
+        shuffleIntent.setAction(Action.SHUFFLE.getName());
     }
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent.getAction()!=null && intent.getAction().equals(ActionBroadCast.CURSEEK.getName())){
-                totalTime = intent.getIntExtra(ForegroundService.totalTimeKey,totalTime );
-                curTime = intent.getIntExtra(ForegroundService.curTimeKey,curTime );
-                nameSong  = intent.getStringExtra(ForegroundService.nameSong);
+
+            if (intent.getAction() == null) {
+                return;
+            }
+            String action = intent.getAction();
+
+            if (action.equals(ActionBroadCast.CURSEEK.getName())) {
+                pos = intent.getIntExtra(ForegroundService.SONG_ID, pos);
+                totalTime = intent.getIntExtra(ForegroundService.TOTAL_TIME_KEY, totalTime);
+                curTime = intent.getIntExtra(ForegroundService.CUR_TIME_KEY, curTime);
+                nameSong = intent.getStringExtra(ForegroundService.NAME_SONG);
                 update();
+            } else if (action.equals(ActionBroadCast.PLAY.getName())) {
+                btnPlay.setImageResource(R.drawable.ic_pause);
+                isPlaying = true;
+            } else if (action.equals(ActionBroadCast.PAUSE.getName())) {
+                ShowLog.logInfo("inner", "pause");
+                btnPlay.setImageResource(R.drawable.ic_play);
+                isPlaying = false;
+            } else if (action.equals(ActionBroadCast.STOP.getName())) {
+                btnPlay.setImageResource(R.drawable.ic_play);
+                isPlaying = false;
             }
         }
     };
 
-    private void register(){
-        if(!isRegister){
+    private void register() {
+        if (!isRegister) {
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction(ActionBroadCast.CURSEEK.getName());
-            registerReceiver(broadcastReceiver,intentFilter );
-            isRegister=true;
+            intentFilter.addAction(ActionBroadCast.NEXT.getName());
+            intentFilter.addAction(ActionBroadCast.PREV.getName());
+            intentFilter.addAction(ActionBroadCast.PLAY.getName());
+            intentFilter.addAction(ActionBroadCast.PAUSE.getName());
+            intentFilter.addAction(ActionBroadCast.STOP.getName());
+
+            registerReceiver(broadcastReceiver, intentFilter);
+            isRegister = true;
         }
     }
-    private void unRegister(){
-        if(isRegister){
+
+    private void unRegister() {
+        if (isRegister) {
             unregisterReceiver(broadcastReceiver);
             isRegister = false;
         }
@@ -160,4 +230,47 @@ public class PlayerActivity extends AppCompatActivity {
         super.onStop();
     }
 
+    private void setClick() {
+        btnPlay.setOnClickListener(v -> {
+            ShowLog.logInfo("inner click", "play");
+            if (isPlaying) {
+                startService(pauseIntent);
+            } else {
+                startService(playIntent);
+            }
+            isPlaying = !isPlaying;
+        });
+        btnPrev.setOnClickListener(v -> {
+            ShowLog.logInfo("inner click", "prev");
+            startService(prevIntent);
+        });
+        btnNext.setOnClickListener(v -> {
+            ShowLog.logInfo("inner click", "next");
+            startService(nextIntent);
+        });
+        btnShuffle.setOnClickListener(v -> {
+            isShuffle = !isShuffle;
+
+            if(isShuffle){
+                btnShuffle.setImageResource(R.drawable.ic_shuffle_selected);
+            }else{
+                btnShuffle.setImageResource(R.drawable.ic_shuffle_unselected);
+            }
+
+            shuffleIntent.putExtra(ForegroundService.SHUFFLE_KEY, isShuffle);
+            startService(shuffleIntent);
+        });
+        btnRepeat.setOnClickListener(v -> {
+            isRepeat = !isRepeat;
+
+            if(isRepeat){
+                btnRepeat.setImageResource(R.drawable.ic_repeat_selected);
+            }else{
+                btnRepeat.setImageResource(R.drawable.ic_repeat_unselected);
+            }
+
+            repeatIntent.putExtra(ForegroundService.REPEAT_KEY, isRepeat);
+            startService(repeatIntent);
+        });
+    }
 }

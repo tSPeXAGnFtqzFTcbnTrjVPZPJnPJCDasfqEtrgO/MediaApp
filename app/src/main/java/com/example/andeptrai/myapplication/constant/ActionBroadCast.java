@@ -1,7 +1,12 @@
 package com.example.andeptrai.myapplication.constant;
 
 public enum ActionBroadCast {
-    CURSEEK();
+    CURSEEK(),
+    PLAY(),
+    PAUSE(),
+    PREV(),
+    NEXT(),
+    STOP();
 
     private String name;
 

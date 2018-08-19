@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.example.andeptrai.myapplication.model.Song;
 
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -108,6 +109,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onNext(List<Song> songs) {
                         if(songs!=null) {
                             Instance.songList.addAll(songs);
+                            Instance.songShuffleList.addAll(songs);
+                            Collections.shuffle(Instance.songShuffleList);
                         }
 
                     }

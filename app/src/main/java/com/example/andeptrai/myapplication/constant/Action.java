@@ -8,7 +8,9 @@ public enum Action {
     STOP,
     NEXT,
     PREVIOUS,
-    UPDATE;
+    UPDATE,
+    REPEAT,
+    SHUFFLE;
 
     String name;
     Action(){

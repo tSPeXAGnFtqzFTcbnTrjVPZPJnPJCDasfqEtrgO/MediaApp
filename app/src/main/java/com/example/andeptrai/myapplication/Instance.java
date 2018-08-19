@@ -6,4 +6,5 @@ import java.util.ArrayList;
 
 public class Instance {
     public static ArrayList<Song> songList = new ArrayList<>();
+    public static ArrayList<Song> songShuffleList = new ArrayList<>();
 }
