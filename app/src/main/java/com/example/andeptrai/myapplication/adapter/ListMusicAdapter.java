@@ -143,47 +143,10 @@ public class ListMusicAdapter extends RecyclerView.Adapter<ListMusicAdapter.Hold
                 }
             });
 
-//            itemView.setOnLongClickListener(v -> {
-//                int pos = getLayoutPosition();
-//                ShowLog.logVar("pos", pos);
-//                if (!isSelect) {
-//                    isSelect = true;
-//                    checkList.set(pos, Boolean.TRUE);
-//                    notifyDataSetChanged();
-//
-//                    return true;
-//                }
-//
-//                return false;
-//            });
-//            itemView.setOnClickListener(v -> {
-//                int pos = getLayoutPosition();
-//                ShowLog.logVar("pos", pos);
-//
-//                if (isSelect) {
-//                    if (checkList.get(pos)) {
-//                        checkList.set(pos, false);
-//                        checkBox.setChecked(checkList.get(pos));
-//                        numSelect--;
-//                    } else {
-//                        checkList.set(pos, true);
-//                        checkBox.setChecked(checkList.get(pos));
-//                        numSelect++;
-//                    }
-//                } else {
-//                    Intent intent = new Intent(context, ForegroundService.class);
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                    intent.putExtra(ForegroundService.POS_KEY, pos);
-//                    intent.setAction(Action.START_FORE.getName());
-//
-//                    context.startService(intent);
-//                }
-//            });
-
         }
     }
 
-    public void setGone() {
+    private void setGone() {
         isSelect = false;
         for (int i = 0; i < checkList.size(); i++) {
             checkList.set(i, Boolean.FALSE);
@@ -206,10 +169,8 @@ public class ListMusicAdapter extends RecyclerView.Adapter<ListMusicAdapter.Hold
 
     public void callApply() {
         ShowLog.logInfo("adapter", "apply");
+        setGone();
     }
 
-    public void setClick() {
-
-    }
 
 }

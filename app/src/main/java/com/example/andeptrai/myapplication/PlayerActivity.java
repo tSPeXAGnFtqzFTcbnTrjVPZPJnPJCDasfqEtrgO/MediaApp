@@ -33,7 +33,10 @@ import butterknife.ButterKnife;
 
 public class PlayerActivity extends AppCompatActivity {
 
-
+    @BindView(R.id.txtv_name)
+    TextView txtvName;
+    @BindView(R.id.txtv_artist)
+    TextView txtvArtist;
     @BindView(R.id.indicator)
     MyIndicatorView indicatorView;
     @BindView(R.id.view_pager)
@@ -56,7 +59,7 @@ public class PlayerActivity extends AppCompatActivity {
     @BindView(R.id.btn_repeat)
     ImageButton btnRepeat;
 
-    Intent playIntent, pauseIntent, prevIntent, nextIntent;
+    Intent playIntent, pauseIntent, prevIntent, nextIntent,startFore;
     Intent updateIntent;
     Intent shuffleIntent, repeatIntent;
     ArrayList<Fragment> fragments = new ArrayList<>();
@@ -64,6 +67,7 @@ public class PlayerActivity extends AppCompatActivity {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss");
 
     String nameSong = "";
+    String nameArtist="";
     int curTime = 0;
     int totalTime = 0;
     int pos = 0;
@@ -71,6 +75,7 @@ public class PlayerActivity extends AppCompatActivity {
     boolean isPlaying = true;
     boolean isShuffle = false;
     boolean isRepeat = false;
+    boolean isStop = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +93,9 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     private void init() {
+        txtvName.setSelected(true);
+        txtvArtist.setSelected(true);
+
 
         fragments.add(new DiscFragment());
         fragments.add(new CurrentListMusicFragment());
@@ -144,9 +152,16 @@ public class PlayerActivity extends AppCompatActivity {
         seekBar.setProgress(curTime);
         txtvDuration.setText(simpleDateFormat.format(curTime));
         txtvDurationTotal.setText(simpleDateFormat.format(totalTime));
+
+        if(!txtvName.getText().toString().equals(nameSong)){
+            txtvName.setText(nameSong);
+            txtvArtist.setText(nameArtist);
+        }
     }
 
     private void setupIntent() {
+        startFore = new  Intent(this, ForegroundService.class);
+        startFore.setAction(Action.START_FORE.getName());
 
         playIntent = new Intent(this, ForegroundService.class);
         playIntent.setAction(Action.PLAY.getName());
@@ -180,11 +195,16 @@ public class PlayerActivity extends AppCompatActivity {
             }
             String action = intent.getAction();
 
+            ShowLog.logInfo("getting from sv",action );
+
+            isStop = false;
+
             if (action.equals(ActionBroadCast.CURSEEK.getName())) {
                 pos = intent.getIntExtra(ForegroundService.SONG_ID, pos);
                 totalTime = intent.getIntExtra(ForegroundService.TOTAL_TIME_KEY, totalTime);
                 curTime = intent.getIntExtra(ForegroundService.CUR_TIME_KEY, curTime);
                 nameSong = intent.getStringExtra(ForegroundService.NAME_SONG);
+                nameArtist = intent.getStringExtra(ForegroundService.NAME_ARTIST);
                 update();
             } else if (action.equals(ActionBroadCast.PLAY.getName())) {
                 btnPlay.setImageResource(R.drawable.ic_pause);
@@ -195,6 +215,8 @@ public class PlayerActivity extends AppCompatActivity {
                 isPlaying = false;
             } else if (action.equals(ActionBroadCast.STOP.getName())) {
                 btnPlay.setImageResource(R.drawable.ic_play);
+
+                isStop = true;
                 isPlaying = false;
             }
         }
@@ -234,7 +256,12 @@ public class PlayerActivity extends AppCompatActivity {
             if (isPlaying) {
                 startService(pauseIntent);
             } else {
-                startService(playIntent);
+                if(isStop){
+                    startFore.putExtra(ForegroundService.POS_KEY,pos);
+                    startService(startFore);
+                }else {
+                    startService(playIntent);
+                }
             }
             isPlaying = !isPlaying;
         });

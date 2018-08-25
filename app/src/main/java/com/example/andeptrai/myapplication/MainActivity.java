@@ -52,8 +52,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void action(){
-        Intent intent = new Intent(MainActivity.this,ListMusicActivity.class);
-        //Intent intent = new Intent(MainActivity.this,PlayerActivity.class);
+        //Intent intent = new Intent(MainActivity.this,ListMusicActivity.class);
+        Intent intent = new Intent(MainActivity.this,PlayerActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

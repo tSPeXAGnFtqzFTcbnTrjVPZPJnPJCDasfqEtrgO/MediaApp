@@ -47,6 +47,7 @@ public class ListMusicFragment extends Fragment {
 
         init();
         action();
+        setClick();
 
         return view;
     }
@@ -54,7 +55,7 @@ public class ListMusicFragment extends Fragment {
     private void init() {
         onLongClickListener = (view, posion) -> {
             ShowLog.logVar("position long in frag", posion);
-            showBottomMenu(false);
+            showBottomMenu(true);
         };
         onClickListener = (view,position)->{
             ShowLog.logInfo("click fragment", position);
@@ -86,6 +87,7 @@ public class ListMusicFragment extends Fragment {
         });
         btnApply.setOnClickListener(v -> {
             musicAdapter.callApply();
+            showBottomMenu(false);
         });
         btnEdit.setOnClickListener(v -> {
             musicAdapter.callEdit();
