@@ -9,8 +9,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -20,8 +18,8 @@ import com.example.andeptrai.myapplication.Services.ForegroundService;
 import com.example.andeptrai.myapplication.adapter.ViewPagerAdapter;
 import com.example.andeptrai.myapplication.constant.Action;
 import com.example.andeptrai.myapplication.constant.ActionBroadCast;
-import com.example.andeptrai.myapplication.fragment.Fragment1;
-import com.example.andeptrai.myapplication.fragment.Fragment2;
+import com.example.andeptrai.myapplication.fragment.DiscFragment;
+import com.example.andeptrai.myapplication.fragment.CurrentListMusicFragment;
 import com.example.andeptrai.myapplication.function.ShowLog;
 import com.example.andeptrai.myapplication.indicator.MyIndicatorView;
 import com.example.andeptrai.myapplication.indicator.PageException;
@@ -91,8 +89,8 @@ public class PlayerActivity extends AppCompatActivity {
 
     private void init() {
 
-        fragments.add(new Fragment1());
-        fragments.add(new Fragment2());
+        fragments.add(new DiscFragment());
+        fragments.add(new CurrentListMusicFragment());
 
 
         pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), fragments);

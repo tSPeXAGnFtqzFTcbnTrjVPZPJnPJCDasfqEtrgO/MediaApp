@@ -30,7 +30,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-public class Fragment2 extends Fragment {
+public class CurrentListMusicFragment extends Fragment {
     @BindView(R.id.list_search)
     RecyclerView listSearch;
     ArrayList<String> searchs = new ArrayList<>();

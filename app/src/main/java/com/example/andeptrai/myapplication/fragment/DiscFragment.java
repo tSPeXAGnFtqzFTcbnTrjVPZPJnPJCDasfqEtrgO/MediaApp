@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import com.example.andeptrai.myapplication.Animation.CustomAnimation;
 import com.example.andeptrai.myapplication.R;
 
-public class Fragment1 extends Fragment {
+public class DiscFragment extends Fragment {
     ImageView imageView;
     @Nullable
     @Override

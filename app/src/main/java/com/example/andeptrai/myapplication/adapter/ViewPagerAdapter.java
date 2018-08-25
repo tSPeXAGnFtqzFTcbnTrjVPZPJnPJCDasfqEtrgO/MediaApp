@@ -20,11 +20,11 @@ public class ViewPagerAdapter extends FragmentPagerAdapter{
 
 //        switch (position){
 //            case 0:{
-//                return new Fragment1();
+//                return new DiscFragment();
 //
 //            }
 //            case 1:{
-//                return new Fragment2();
+//                return new CurrentListMusicFragment();
 //
 //            }
 //            case 2:{
