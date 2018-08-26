@@ -6,7 +6,8 @@ public enum ActionBroadCast {
     PAUSE(),
     PREV(),
     NEXT(),
-    STOP();
+    STOP(),
+    UPDATE_LIST_SHUFFLE();
 
     private String name;
 

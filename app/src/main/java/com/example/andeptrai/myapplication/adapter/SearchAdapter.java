@@ -12,15 +12,14 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.example.andeptrai.myapplication.Instance;
 import com.example.andeptrai.myapplication.R;
 import com.example.andeptrai.myapplication.Services.ForegroundService;
 import com.example.andeptrai.myapplication.constant.Action;
 import com.example.andeptrai.myapplication.function.Kmp;
 import com.example.andeptrai.myapplication.model.Song;
 
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Locale;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> implements Filterable{
@@ -118,5 +117,17 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
                 }
                 notifyDataSetChanged();
         }
+    }
+
+    public void shuffle(boolean isShuffle){
+        songs = baseSongs;
+        ArrayList<Song> suffleArray = new ArrayList<>();
+        suffleArray.addAll(baseSongs);
+
+        if(isShuffle){
+            Collections.shuffle(suffleArray);
+            songs = suffleArray;
+        }
+        notifyDataSetChanged();
     }
 }

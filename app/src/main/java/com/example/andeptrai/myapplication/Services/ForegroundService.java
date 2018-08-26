@@ -102,8 +102,12 @@ public class ForegroundService extends Service {
         super.onStartCommand(intent, flags, startId);
         Log.d("AAA", "start");
 
-        if (intent.getAction() == null) {
-            Log.d("AAA", "Intent null");
+        try {
+            if (intent.getAction() == null) {
+                Log.d("AAA", "Intent null");
+                return START_NOT_STICKY;
+            }
+        } catch (NullPointerException e) {
             return START_NOT_STICKY;
         }
 
@@ -268,7 +272,8 @@ public class ForegroundService extends Service {
             mediaPlayer.pause();
         }
     }
-    private void stop(){
+
+    private void stop() {
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
             mediaPlayer.reset();
@@ -338,7 +343,7 @@ public class ForegroundService extends Service {
         remoteViews.setOnClickPendingIntent(R.id.notifi_next, nextPending);
         remoteViews.setOnClickPendingIntent(R.id.notifi_prev, prevPending);
         remoteViews.setOnClickPendingIntent(R.id.notifi_play, pausePending);
-        remoteViews.setOnClickPendingIntent(R.id.notifi_stop,stopPending );
+        remoteViews.setOnClickPendingIntent(R.id.notifi_stop, stopPending);
 
 
         intentUpdateBroadcast = new Intent();
@@ -365,11 +370,11 @@ public class ForegroundService extends Service {
 
         disposable = io.reactivex.Observable.interval(500, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.computation())
-                .subscribe(lLong->{
+                .subscribe(lLong -> {
                     if (mediaPlayer != null) {
                         intentUpdateBroadcast.putExtra(SONG_ID, pos);
                         intentUpdateBroadcast.putExtra(NAME_SONG, Instance.songList.get(pos).getNameVi());
-                        intentUpdateBroadcast.putExtra(NAME_ARTIST,Instance.songList.get(pos).getArtistName() );
+                        intentUpdateBroadcast.putExtra(NAME_ARTIST, Instance.songList.get(pos).getArtistName());
                         try {
                             intentUpdateBroadcast.putExtra(CUR_TIME_KEY, mediaPlayer.getCurrentPosition());
                             intentUpdateBroadcast.putExtra(TOTAL_TIME_KEY, mediaPlayer.getDuration());
