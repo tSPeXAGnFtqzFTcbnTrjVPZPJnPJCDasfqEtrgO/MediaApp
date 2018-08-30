@@ -57,7 +57,7 @@ public class ForegroundService extends Service {
 
     Disposable disposable;
     MediaPlayer mediaPlayer;
-
+    Song currentSong;
 
     RemoteViews remoteViews = new RemoteViews(MainActivity.PACKAGE_NAME, R.layout.content_notification);
 
@@ -209,9 +209,10 @@ public class ForegroundService extends Service {
             mediaPlayer.release();
 
         }
-        Song song = Instance.songList.get(0);
 
-        ShowLog.logInfo("path", Instance.songList.get(pos).getPath());
+
+        ShowLog.logInfo("path", isShuffle ? Instance.songShuffleList.get(pos).getPath() :
+                Instance.songList.get(pos).getPath());
         int t = pos;
         do {
             ShowLog.logInfo("fore", Instance.songList.get(pos).getNameVi());
@@ -224,12 +225,12 @@ public class ForegroundService extends Service {
             }
 
             if (isShuffle) {
-                song = Instance.songShuffleList.get(pos);
+                currentSong = Instance.songShuffleList.get(pos);
             } else {
-                song = Instance.songList.get(pos);
+                currentSong = Instance.songList.get(pos);
 
             }
-            mediaPlayer = MediaPlayer.create(this, Uri.parse(song.getPath()));
+            mediaPlayer = MediaPlayer.create(this, Uri.parse(currentSong.getPath()));
             if (mediaPlayer != null) {
                 break;
             }
@@ -243,7 +244,7 @@ public class ForegroundService extends Service {
 
             Log.d("a", "playing");
 
-            remoteViews.setTextViewText(R.id.notifi_title, song.getNameVi());
+            remoteViews.setTextViewText(R.id.notifi_title, currentSong.getNameVi());
 
 
             mNotificationManager.notify(FORE_ID, notifiCustom);
@@ -372,9 +373,11 @@ public class ForegroundService extends Service {
                 .subscribeOn(Schedulers.computation())
                 .subscribe(lLong -> {
                     if (mediaPlayer != null) {
+                        intentUpdateBroadcast.putExtra(REPEAT_KEY, isRepeat);
+                        intentUpdateBroadcast.putExtra(SHUFFLE_KEY, isShuffle);
                         intentUpdateBroadcast.putExtra(SONG_ID, pos);
-                        intentUpdateBroadcast.putExtra(NAME_SONG, Instance.songList.get(pos).getNameVi());
-                        intentUpdateBroadcast.putExtra(NAME_ARTIST, Instance.songList.get(pos).getArtistName());
+                        intentUpdateBroadcast.putExtra(NAME_SONG, currentSong.getNameVi());
+                        intentUpdateBroadcast.putExtra(NAME_ARTIST, currentSong.getArtistName());
                         try {
                             intentUpdateBroadcast.putExtra(CUR_TIME_KEY, mediaPlayer.getCurrentPosition());
                             intentUpdateBroadcast.putExtra(TOTAL_TIME_KEY, mediaPlayer.getDuration());

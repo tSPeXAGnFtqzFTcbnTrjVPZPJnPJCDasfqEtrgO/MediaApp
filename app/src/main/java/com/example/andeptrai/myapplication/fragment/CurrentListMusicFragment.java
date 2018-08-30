@@ -47,6 +47,7 @@ public class CurrentListMusicFragment extends Fragment {
     Context mContext;
 
     int pos;
+    boolean isShuffle = false;
 
     @Override
     public void onAttach(Context context) {
@@ -123,6 +124,7 @@ public class CurrentListMusicFragment extends Fragment {
     private void register() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ActionBroadCast.UPDATE_LIST_SHUFFLE.getName());
+        intentFilter.addAction(ActionBroadCast.CURSEEK.getName());
         mContext.registerReceiver(broadcastReceiver, intentFilter);
     }
 
@@ -139,16 +141,26 @@ public class CurrentListMusicFragment extends Fragment {
             String action = intent.getAction();
 
             if (action.equals(ActionBroadCast.UPDATE_LIST_SHUFFLE.getName())) {
-                boolean isShuffle = intent.getBooleanExtra(PlayerActivity.UPDATE_SHUFFLE_KEY, false);
-                searchView.setQuery("", false);
+                boolean prevShuffle = isShuffle;
+                isShuffle = intent.getBooleanExtra(PlayerActivity.UPDATE_SHUFFLE_KEY, isShuffle);
 
-                adapterSearch.shuffle(isShuffle);
+                if (isShuffle != prevShuffle) {
+                    adapterSearch.shuffle(isShuffle);
+                    searchView.setQuery("", false);
+                    searchView.setIconified(true);
+                }
 
             } else if (action.equals(ActionBroadCast.CURSEEK.getName())) {
+                boolean prevShuffle = isShuffle;
+                isShuffle = intent.getBooleanExtra(ForegroundService.SHUFFLE_KEY, isShuffle);
+                if (prevShuffle != isShuffle) {
+                    adapterSearch.shuffle(isShuffle);
+                }
+
                 int t = intent.getIntExtra(ForegroundService.SONG_ID, pos);
                 if (t != pos) {
                     pos = t;
-                    if(pos<adapterSearch.getItemCount()){
+                    if (pos < adapterSearch.getItemCount()) {
                         listSearch.scrollToPosition(pos);
                     }
                 }

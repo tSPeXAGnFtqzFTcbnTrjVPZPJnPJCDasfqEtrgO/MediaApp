@@ -40,5 +40,8 @@ dependencies {
 
     implementation "com.github.bq:markerseekbar:v0.9"
 
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.8'
+
 
 }

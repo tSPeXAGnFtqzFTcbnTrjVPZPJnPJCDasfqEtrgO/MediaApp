@@ -12,6 +12,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
+import com.example.andeptrai.myapplication.Instance;
 import com.example.andeptrai.myapplication.R;
 import com.example.andeptrai.myapplication.Services.ForegroundService;
 import com.example.andeptrai.myapplication.constant.Action;
@@ -22,16 +23,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 
-public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> implements Filterable{
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> implements Filterable {
 
     ArrayList<Song> songs;
     ArrayList<Song> baseSongs;
+    ArrayList<Song> shuffleSongs;
     Context context;
     ItemFilter itemFilter = new ItemFilter();
+
+    boolean isShuffle = false;
 
     public SearchAdapter(ArrayList<Song> songs, Context context) {
         this.songs = songs;
         this.baseSongs = songs;
+        this.shuffleSongs = songs;
         this.context = context;
     }
 
@@ -39,16 +44,16 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.item_search,parent,false );
+        View view = inflater.inflate(R.layout.item_search, parent, false);
 
         return new Holder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
-        if(Locale.getDefault().getLanguage().equals("vi")){
+        if (Locale.getDefault().getLanguage().equals("vi")) {
             holder.txtvName.setText(songs.get(position).getNameVi());
-        }else{
+        } else {
             holder.txtvName.setText(songs.get(position).getNameEn());
         }
     }
@@ -63,9 +68,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
         return itemFilter;
     }
 
-    class Holder extends RecyclerView.ViewHolder{
+    class Holder extends RecyclerView.ViewHolder {
 
         TextView txtvName;
+
         public Holder(View itemView) {
             super(itemView);
             txtvName = itemView.findViewById(R.id.item_name);
@@ -76,30 +82,30 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
                 int pos = getLayoutPosition();
                 int index = songs.get(pos).getPosition();
 
-                Intent intent  = new Intent(context, ForegroundService.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(ForegroundService.POS_KEY,index);
+                Intent intent = new Intent(context, ForegroundService.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(ForegroundService.POS_KEY, index);
                 intent.setAction(Action.START_FORE.getName());
 
-                Log.d("AAA","recycler "+index );
+                Log.d("AAA", "recycler " + index);
                 context.startService(intent);
             });
 
         }
     }
 
-    private class ItemFilter extends Filter{
+    private class ItemFilter extends Filter {
 
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
-            if(charSequence.toString().trim().equals("")){
+            if (charSequence.toString().trim().equals("")) {
                 return null;
             }
             FilterResults results = new FilterResults();
             ArrayList<Song> nlist = new ArrayList<>();
 
-            for(int i = 0; i< baseSongs.size(); i++){
-                if(Kmp.isMatch(baseSongs.get(i).getNameSearch(),charSequence.toString() )){
+            for (int i = 0; i < baseSongs.size(); i++) {
+                if (Kmp.isMatch(baseSongs.get(i).getNameSearch(), charSequence.toString())) {
                     nlist.add(baseSongs.get(i));
                 }
             }
@@ -110,24 +116,35 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                if(filterResults == null){
-                    songs = baseSongs;
-                }else{
-                    songs = (ArrayList<Song>) filterResults.values;
-                }
-                notifyDataSetChanged();
+            if (filterResults == null) {
+                songs = isShuffle ? shuffleSongs : baseSongs;
+            } else {
+                songs = (ArrayList<Song>) filterResults.values;
+            }
+            notifyDataSetChanged();
         }
     }
 
-    public void shuffle(boolean isShuffle){
+    public void shuffle(boolean isShuffle) {
+
+        this.isShuffle = isShuffle;
+
         songs = baseSongs;
+        shuffleSongs = baseSongs;
+
         ArrayList<Song> suffleArray = new ArrayList<>();
         suffleArray.addAll(baseSongs);
 
-        if(isShuffle){
+        if (isShuffle) {
             Collections.shuffle(suffleArray);
             songs = suffleArray;
+            shuffleSongs = suffleArray;
+            for (int i = 0; i < songs.size(); i++) {
+                songs.get(i).setPosition(i);
+            }
         }
+        Instance.songShuffleList.clear();
+        Instance.songShuffleList.addAll(songs);
         notifyDataSetChanged();
     }
 }

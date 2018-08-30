@@ -15,7 +15,12 @@ import android.widget.ImageButton;
 import com.example.andeptrai.myapplication.Instance;
 import com.example.andeptrai.myapplication.R;
 import com.example.andeptrai.myapplication.adapter.ListMusicAdapter;
+import com.example.andeptrai.myapplication.dialog.ShowPlaylistDialog;
 import com.example.andeptrai.myapplication.function.ShowLog;
+
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,6 +44,8 @@ public class ListMusicFragment extends Fragment {
     ListMusicAdapter.OnLongClickListener onLongClickListener;
     ListMusicAdapter.OnClickListener  onClickListener;
 
+    ArrayList<Long> ids = new ArrayList<>();
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,7 +64,18 @@ public class ListMusicFragment extends Fragment {
             ShowLog.logVar("position long in frag", posion);
             showBottomMenu(true);
         };
-        onClickListener = (view,position)->{
+        onClickListener = (view,position,numSelect, checkList )->{
+            if(numSelect == 1){
+                btnEdit.setVisibility(View.VISIBLE);
+            }else {
+                btnEdit.setVisibility(View.GONE);
+            }
+            ids.clear();
+            for(int i=0;i<Instance.songList.size();i++){
+                if(checkList.get(i)){
+                    ids.add(Instance.songList.get(i).getId());
+                }
+            }
             ShowLog.logInfo("click fragment", position);
         };
         musicAdapter = new ListMusicAdapter(Instance.songList, getContext(), onLongClickListener,onClickListener);
@@ -76,6 +94,7 @@ public class ListMusicFragment extends Fragment {
     public void showBottomMenu(boolean show) {
         if (show) {
             frameLayout.setVisibility(View.VISIBLE);
+            btnEdit.setVisibility(View.GONE);
         } else {
             frameLayout.setVisibility(View.GONE);
         }
@@ -83,6 +102,10 @@ public class ListMusicFragment extends Fragment {
 
     private void setClick() {
         btnAdd.setOnClickListener(v -> {
+            Long[] idsArr;
+            idsArr = ids.toArray(new Long[0]);
+            ShowPlaylistDialog.newInstance(ArrayUtils.toPrimitive(idsArr))
+                    .show(getActivity().getSupportFragmentManager(),"ls" );
             musicAdapter.callAddToPlaylist();
         });
         btnApply.setOnClickListener(v -> {

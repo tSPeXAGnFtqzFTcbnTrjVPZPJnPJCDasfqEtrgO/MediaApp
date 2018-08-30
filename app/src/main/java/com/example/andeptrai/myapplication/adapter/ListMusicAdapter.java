@@ -24,12 +24,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ListMusicAdapter extends RecyclerView.Adapter<ListMusicAdapter.Holder> {
+
     ArrayList<Song> mSongs;
     Context context;
     ListMusicActivity listMusicActivity;
 
     ArrayList<Boolean> checkList = new ArrayList<>();
-    ;
+
     boolean isSelect = false;
     int numSelect = 0;
 
@@ -41,7 +42,7 @@ public class ListMusicAdapter extends RecyclerView.Adapter<ListMusicAdapter.Hold
     }
 
     public interface OnClickListener {
-        void onClick(View view, int position);
+        void onClick(View view, int position,int numSelect,ArrayList<Boolean> checkList);
     }
 
     public ListMusicAdapter(ArrayList<Song> songs, Context context,
@@ -108,12 +109,16 @@ public class ListMusicAdapter extends RecyclerView.Adapter<ListMusicAdapter.Hold
             checkBox.setClickable(false);
             itemView.setOnLongClickListener(view -> {
                 int pos = getLayoutPosition();
-                longClickListener.onLongClick(view, pos);
 
                 if (!isSelect) {
+                    numSelect++;
                     isSelect = true;
                     checkList.set(pos, Boolean.TRUE);
                     notifyDataSetChanged();
+
+                    longClickListener.onLongClick(view, pos);
+                    clickListener.onClick(view, pos,numSelect,checkList);
+
 
                     return true;
                 }
@@ -122,7 +127,7 @@ public class ListMusicAdapter extends RecyclerView.Adapter<ListMusicAdapter.Hold
             });
             itemView.setOnClickListener(view -> {
                 int pos = getLayoutPosition();
-                clickListener.onClick(view, pos);
+
                 if (isSelect) {
                     if (checkList.get(pos)) {
                         checkList.set(pos, false);
@@ -133,6 +138,7 @@ public class ListMusicAdapter extends RecyclerView.Adapter<ListMusicAdapter.Hold
                         checkBox.setChecked(checkList.get(pos));
                         numSelect++;
                     }
+                    clickListener.onClick(view, pos,numSelect,checkList);
                 } else {
                     Intent intent = new Intent(context, ForegroundService.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -142,12 +148,12 @@ public class ListMusicAdapter extends RecyclerView.Adapter<ListMusicAdapter.Hold
                     context.startService(intent);
                 }
             });
-
         }
     }
 
     private void setGone() {
         isSelect = false;
+        numSelect = 0;
         for (int i = 0; i < checkList.size(); i++) {
             checkList.set(i, Boolean.FALSE);
         }
@@ -172,5 +178,8 @@ public class ListMusicAdapter extends RecyclerView.Adapter<ListMusicAdapter.Hold
         setGone();
     }
 
+    public void setClick() {
+
+    }
 
 }
