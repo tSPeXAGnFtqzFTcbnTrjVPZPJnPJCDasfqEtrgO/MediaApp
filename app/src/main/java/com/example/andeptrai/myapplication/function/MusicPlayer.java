@@ -40,10 +40,11 @@ public class MusicPlayer {
 
             ShowLog.logInfo("putting",ids[i] );
         }
+        context.getContentResolver().delete(uri,null , null);
         context.getContentResolver().bulkInsert(uri,values );
     }
 
-    public static long createPlaylist(Context context, String name) {
+    public static int createPlaylist(Context context, String name) {
 
         if (name != null && name.length() > 0) {
             String where = MediaStore.Audio.Playlists.NAME + " = ? ";
@@ -61,7 +62,7 @@ public class MusicPlayer {
                 values.put(MediaStore.Audio.Playlists.NAME, name);
                 Uri uri = context.getContentResolver().insert(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
                         values);
-                return Long.parseLong(uri.getLastPathSegment());
+                return Integer.parseInt(uri.getLastPathSegment());
 
             }
         }

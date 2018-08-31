@@ -18,7 +18,7 @@ import android.widget.SearchView;
 import com.example.andeptrai.myapplication.Instance;
 import com.example.andeptrai.myapplication.PlayerActivity;
 import com.example.andeptrai.myapplication.R;
-import com.example.andeptrai.myapplication.Services.ForegroundService;
+import com.example.andeptrai.myapplication.services.ForegroundService;
 import com.example.andeptrai.myapplication.adapter.SearchAdapter;
 import com.example.andeptrai.myapplication.constant.ActionBroadCast;
 import com.example.andeptrai.myapplication.function.RxSearch;

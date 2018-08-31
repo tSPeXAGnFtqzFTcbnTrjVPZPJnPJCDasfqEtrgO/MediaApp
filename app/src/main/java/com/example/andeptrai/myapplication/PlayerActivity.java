@@ -14,7 +14,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.bq.markerseekbar.MarkerSeekBar;
-import com.example.andeptrai.myapplication.Services.ForegroundService;
+import com.example.andeptrai.myapplication.services.ForegroundService;
 import com.example.andeptrai.myapplication.adapter.ViewPagerAdapter;
 import com.example.andeptrai.myapplication.constant.Action;
 import com.example.andeptrai.myapplication.constant.ActionBroadCast;

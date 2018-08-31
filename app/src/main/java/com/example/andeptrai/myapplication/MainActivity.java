@@ -74,8 +74,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void action(){
-        //Intent intent = new Intent(MainActivity.this,ListMusicActivity.class);
-        Intent intent = new Intent(MainActivity.this,PlayerActivity.class);
+        Intent intent = new Intent(MainActivity.this,ListMusicActivity.class);
+        //Intent intent = new Intent(MainActivity.this,PlayerActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
@@ -233,6 +233,10 @@ public class MainActivity extends AppCompatActivity {
         if (playlists != null) {
             for (Playlist playlist : playlists) {
                 ArrayList<Song> songs = PlaylistSongLoader.getSongFromPlaylist(getApplicationContext(), playlist.getmId());
+                ShowLog.logInfo("size " + playlist.getmName(), playlist.getmCount());
+                for (Song song : songs) {
+                    ShowLog.logInfo(playlist.getmName(), song.getNameVi());
+                }
             }
         } else {
             ShowLog.logInfo("playlist", "null");

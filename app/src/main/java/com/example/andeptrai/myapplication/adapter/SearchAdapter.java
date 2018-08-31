@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.example.andeptrai.myapplication.Instance;
 import com.example.andeptrai.myapplication.R;
-import com.example.andeptrai.myapplication.Services.ForegroundService;
+import com.example.andeptrai.myapplication.services.ForegroundService;
 import com.example.andeptrai.myapplication.constant.Action;
 import com.example.andeptrai.myapplication.function.Kmp;
 import com.example.andeptrai.myapplication.model.Song;

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.andeptrai.myapplication.R;
-import com.example.andeptrai.myapplication.Services.ForegroundService;
+import com.example.andeptrai.myapplication.services.ForegroundService;
 import com.example.andeptrai.myapplication.constant.Action;
 import com.example.andeptrai.myapplication.model.Song;
 

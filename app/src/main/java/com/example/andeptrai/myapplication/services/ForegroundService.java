@@ -1,4 +1,4 @@
-package com.example.andeptrai.myapplication.Services;
+package com.example.andeptrai.myapplication.services;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -215,7 +215,7 @@ public class ForegroundService extends Service {
                 Instance.songList.get(pos).getPath());
         int t = pos;
         do {
-            ShowLog.logInfo("fore", Instance.songList.get(pos).getNameVi());
+
 
             if (isEnd && isRepeat) {//repeat if end of song (false when event next-prev-start
                 if (pos == 0) {
@@ -241,8 +241,7 @@ public class ForegroundService extends Service {
             ShowLog.logInfo("for mp", mediaPlayer);
         } while (t != pos);
         if (mediaPlayer != null) {
-
-            Log.d("a", "playing");
+            ShowLog.logInfo("fore", currentSong.getNameVi());
 
             remoteViews.setTextViewText(R.id.notifi_title, currentSong.getNameVi());
 

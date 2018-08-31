@@ -34,9 +34,23 @@ public class ShowPlaylistDialog extends DialogFragment {
 
     PlaylistAdapter.ItemClick itemClick;
 
-    private static final String keySong = "key_song";
+    private static final String keySongId = "key_song";
+    private static final String keySongArr = "key_song_arr";
+
+    long[] ids;
+    private ArrayList<Song> mSongs;
 
 
+    public static ShowPlaylistDialog newInstance(ArrayList<Song> songs){
+        ShowPlaylistDialog dialog = new ShowPlaylistDialog();
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(keySongArr,songs );
+        dialog.setArguments(bundle);
+
+        return dialog;
+
+    }
     public static void newInstance(Song song) {
 
         long[] id = new long[1];
@@ -48,7 +62,7 @@ public class ShowPlaylistDialog extends DialogFragment {
         ShowPlaylistDialog dialog = new ShowPlaylistDialog();
 
         Bundle bundle = new Bundle();
-        bundle.putLongArray(keySong, id);
+        bundle.putLongArray(keySongId, id);
         dialog.setArguments(bundle);
 
         return dialog;
@@ -80,16 +94,18 @@ public class ShowPlaylistDialog extends DialogFragment {
 
         Dialog dialog = getDialog();
         if(dialog!=null){
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, 400);
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, 500);
         }
     }
 
     private void init(){
-        int id = getArguments().getInt(keySong);
+        //ids = getArguments().getLongArray(keySongId);
+        //int id = getArguments().getInt(keySongId);
+        mSongs = (ArrayList<Song>) getArguments().getSerializable(keySongArr);
         setItemClick();
 
 
-        ShowLog.logInfo("show pp dialog", Instance.playlists.size() );
+        ShowLog.logInfo("show pp dialog",Instance.playlists.size() );
         playlists.addAll(Instance.playlists);
         playlists.add(0,new Playlist(-1, 0, "New Playlist"));
         playlistAdapter = new PlaylistAdapter(playlists, getContext(), itemClick);
@@ -105,10 +121,12 @@ public class ShowPlaylistDialog extends DialogFragment {
         itemClick = (view, position) -> {
             ShowLog.logInfo("adapter pp click",position );
             if (position == 0) {
-
+                ShowAddPlaylistDialog.newInstance(mSongs)
+                        .show(getActivity().getSupportFragmentManager(),"add Playlist" );
             } else {
-
+                Instance.playlists.get(position-1).addSongArray(getContext(),mSongs);
             }
+            getDialog().dismiss();
         };
     }
 }

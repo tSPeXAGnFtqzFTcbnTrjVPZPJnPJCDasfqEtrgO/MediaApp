@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.example.andeptrai.myapplication.ListMusicActivity;
 import com.example.andeptrai.myapplication.R;
-import com.example.andeptrai.myapplication.Services.ForegroundService;
+import com.example.andeptrai.myapplication.services.ForegroundService;
 import com.example.andeptrai.myapplication.constant.Action;
 import com.example.andeptrai.myapplication.function.GetSongName;
 import com.example.andeptrai.myapplication.function.ShowLog;

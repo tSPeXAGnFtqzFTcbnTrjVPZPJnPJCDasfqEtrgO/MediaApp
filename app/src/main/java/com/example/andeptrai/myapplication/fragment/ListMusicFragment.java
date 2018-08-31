@@ -17,6 +17,7 @@ import com.example.andeptrai.myapplication.R;
 import com.example.andeptrai.myapplication.adapter.ListMusicAdapter;
 import com.example.andeptrai.myapplication.dialog.ShowPlaylistDialog;
 import com.example.andeptrai.myapplication.function.ShowLog;
+import com.example.andeptrai.myapplication.model.Song;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -44,7 +45,7 @@ public class ListMusicFragment extends Fragment {
     ListMusicAdapter.OnLongClickListener onLongClickListener;
     ListMusicAdapter.OnClickListener  onClickListener;
 
-    ArrayList<Long> ids = new ArrayList<>();
+    ArrayList<Song> songs = new ArrayList<>();
 
     @Nullable
     @Override
@@ -70,10 +71,11 @@ public class ListMusicFragment extends Fragment {
             }else {
                 btnEdit.setVisibility(View.GONE);
             }
-            ids.clear();
+            songs.clear();
             for(int i=0;i<Instance.songList.size();i++){
                 if(checkList.get(i)){
-                    ids.add(Instance.songList.get(i).getId());
+                    //songs.add(Instance.songList.get(i).getId());
+                    songs.add(Instance.songList.get(i));
                 }
             }
             ShowLog.logInfo("click fragment", position);
@@ -102,10 +104,12 @@ public class ListMusicFragment extends Fragment {
 
     private void setClick() {
         btnAdd.setOnClickListener(v -> {
-            Long[] idsArr;
-            idsArr = ids.toArray(new Long[0]);
-            ShowPlaylistDialog.newInstance(ArrayUtils.toPrimitive(idsArr))
-                    .show(getActivity().getSupportFragmentManager(),"ls" );
+//            Long[] idsArr;
+//            idsArr = songs.toArray(new Long[0]);
+//            ShowPlaylistDialog.newInstance(ArrayUtils.toPrimitive(idsArr))
+//                    .show(getActivity().getSupportFragmentManager(),"ls" );
+            ShowPlaylistDialog.newInstance(songs)
+                    .show(getActivity().getSupportFragmentManager(),"xx" );
             musicAdapter.callAddToPlaylist();
         });
         btnApply.setOnClickListener(v -> {

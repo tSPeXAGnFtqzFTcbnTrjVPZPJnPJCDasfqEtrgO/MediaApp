@@ -5,7 +5,9 @@ import android.provider.MediaStore;
 
 import com.example.andeptrai.myapplication.function.ConvertLanguage;
 
-public class Song {
+import java.io.Serializable;
+
+public class Song implements Serializable {
     private String nameVi,path,artistName,albumName,nameEn;
     private String nameSearch;
     private long id,artistId,albumId;
