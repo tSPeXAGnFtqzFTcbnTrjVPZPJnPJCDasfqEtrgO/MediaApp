@@ -11,7 +11,9 @@ public class Song implements Serializable {
     private String nameVi,path,artistName,albumName,nameEn;
     private String nameSearch;
     private long id,artistId,albumId;
+    private int duration;
     private int position;
+
 
     public Song(Cursor cursor,int pos) {
         position = pos;
@@ -19,6 +21,7 @@ public class Song implements Serializable {
         nameVi = nameVi.trim();
         nameEn  = ConvertLanguage.convert(nameVi);
         nameSearch = nameEn.replaceAll(" ","" );
+        duration = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
 
         id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
 
@@ -76,5 +79,9 @@ public class Song implements Serializable {
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public int getDuration() {
+        return duration;
     }
 }

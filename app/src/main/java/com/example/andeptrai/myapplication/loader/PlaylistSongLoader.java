@@ -14,10 +14,10 @@ public class PlaylistSongLoader {
         Cursor cursor = makeCursor(context, playlistId);
         if (cursor != null && cursor.moveToFirst()) {
             do {
-                int id;
+                long id;
                 String songName,artist;
 
-                id = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Playlists.Members.AUDIO_ID));
+                id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Playlists.Members.AUDIO_ID));
                 songs.add(new Song(cursor,songs.size()));
 
             } while (cursor.moveToNext());

@@ -14,7 +14,7 @@ import com.example.andeptrai.myapplication.model.Playlist;
 
 import java.util.ArrayList;
 
-public class PlaylistAdapter extends  RecyclerView.Adapter<PlaylistAdapter.Holder>{
+public class PlaylistDialogAdapter extends  RecyclerView.Adapter<PlaylistDialogAdapter.Holder>{
 
     ArrayList<Playlist> playlists;
     Context context;
@@ -25,7 +25,7 @@ public class PlaylistAdapter extends  RecyclerView.Adapter<PlaylistAdapter.Holde
         void onClick(View view,int position);
     }
 
-    public PlaylistAdapter(ArrayList<Playlist> playlists, Context context,ItemClick itemClick) {
+    public PlaylistDialogAdapter(ArrayList<Playlist> playlists, Context context, ItemClick itemClick) {
         this.playlists = playlists;
         this.context = context;
         this.itemClick = itemClick;

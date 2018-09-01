@@ -14,7 +14,7 @@ import android.view.Window;
 
 import com.example.andeptrai.myapplication.Instance;
 import com.example.andeptrai.myapplication.R;
-import com.example.andeptrai.myapplication.adapter.PlaylistAdapter;
+import com.example.andeptrai.myapplication.adapter.PlaylistDialogAdapter;
 import com.example.andeptrai.myapplication.function.ShowLog;
 import com.example.andeptrai.myapplication.model.Playlist;
 import com.example.andeptrai.myapplication.model.Song;
@@ -29,10 +29,10 @@ public class ShowPlaylistDialog extends DialogFragment {
     @BindView(R.id.recycle_playlist)
     RecyclerView recyclePlaylist;
 
-    PlaylistAdapter playlistAdapter;
+    PlaylistDialogAdapter playlistAdapter;
     ArrayList<Playlist> playlists = new ArrayList<>();
 
-    PlaylistAdapter.ItemClick itemClick;
+    PlaylistDialogAdapter.ItemClick itemClick;
 
     private static final String keySongId = "key_song";
     private static final String keySongArr = "key_song_arr";
@@ -108,7 +108,7 @@ public class ShowPlaylistDialog extends DialogFragment {
         ShowLog.logInfo("show pp dialog",Instance.playlists.size() );
         playlists.addAll(Instance.playlists);
         playlists.add(0,new Playlist(-1, 0, "New Playlist"));
-        playlistAdapter = new PlaylistAdapter(playlists, getContext(), itemClick);
+        playlistAdapter = new PlaylistDialogAdapter(playlists, getContext(), itemClick);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 

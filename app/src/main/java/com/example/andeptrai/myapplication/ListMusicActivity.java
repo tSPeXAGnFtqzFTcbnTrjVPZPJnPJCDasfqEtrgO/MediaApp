@@ -12,6 +12,7 @@ import com.example.andeptrai.myapplication.adapter.ListMusicAdapter;
 import com.example.andeptrai.myapplication.adapter.SongAdapter;
 import com.example.andeptrai.myapplication.adapter.ViewPagerAdapter;
 import com.example.andeptrai.myapplication.fragment.ListMusicFragment;
+import com.example.andeptrai.myapplication.fragment.PlayListFragment;
 
 import java.util.ArrayList;
 
@@ -41,6 +42,7 @@ public class ListMusicActivity extends AppCompatActivity {
 
     private void init() {
         fragments.add(new ListMusicFragment());
+        fragments.add(new PlayListFragment());
         pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), fragments);
         pager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(pager);

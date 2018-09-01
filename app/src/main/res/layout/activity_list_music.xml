@@ -11,7 +11,7 @@
         android:id="@+id/tab_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintVertical_chainStyle="spread"
+        app:layout_constraintVertical_chainStyle="spread_inside"
         app:layout_constraintVertical_weight="1"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/view_pager"
@@ -21,9 +21,10 @@
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintVertical_weight="15"
+        app:layout_constraintVertical_weight="10"
         app:layout_constraintTop_toBottomOf="@id/tab_view"
-        app:layout_constraintLeft_toLeftOf="@id/tab_view"
-        app:layout_constraintBottom_toTopOf="@id/bottom_menu"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
 </android.support.constraint.ConstraintLayout>
