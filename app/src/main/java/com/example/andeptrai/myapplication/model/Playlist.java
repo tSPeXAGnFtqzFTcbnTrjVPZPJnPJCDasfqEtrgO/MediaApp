@@ -2,7 +2,11 @@ package com.example.andeptrai.myapplication.model;
 
 import android.content.Context;
 
+import com.example.andeptrai.myapplication.Instance;
 import com.example.andeptrai.myapplication.function.MusicPlayer;
+import com.example.andeptrai.myapplication.function.ShowLog;
+import com.example.andeptrai.myapplication.loader.PlaylistLoader;
+import com.example.andeptrai.myapplication.loader.PlaylistSongLoader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,21 +54,61 @@ public class Playlist {
         return totalDuration;
     }
 
-    public void addSong(Song song){
+    public ArrayList<Song> getSongs() {
+        return songs;
+    }
+
+    public void addSong(Context context,Song song){
         if(markId.containsKey(song.getId())){
             songs.set(markId.get(song.getId()),song );
         }else{
             markId.put(song.getId(),songs.size() );
             songs.add(song);
             totalDuration+=song.getDuration();
+            mCount++;
+
+            long[] ids = new long[1];
+            ids[0] = song.getId();
+
+            MusicPlayer.addToPlaylist(context,ids , mId);
+
+            loadPlaylist(context);
         }
     }
     public void addSongArray(Context context,ArrayList<Song> songs){
-        long[] ids = new long[songs.size()];
+        //long[] ids = new long[songs.size()];
         for(int i = 0;i<songs.size();i++){
-            addSong(songs.get(i));
-            ids[i]=songs.get(i).getId();
+            addSong(context,songs.get(i));
+          //ssss  ids[i]=songs.get(i).getId();
         }
-        MusicPlayer.addToPlaylist(context,ids , mId);
+
     }
+
+
+    public void pushFirstTime(ArrayList<Song> songs) {
+        totalDuration = mCount = 0;
+        for (Song song : songs) {
+            markId.put(song.getId(), songs.size());
+            this.songs.add(song);
+            totalDuration += song.getDuration();
+            mCount++;
+        }
+    }
+
+    private void loadPlaylist(Context context) {
+        ArrayList<Playlist> playlists = PlaylistLoader.load(context);
+        if (playlists != null) {
+            Instance.playlists.addAll(playlists);
+            for (Playlist playlist : playlists) {
+                ArrayList<Song> songs = PlaylistSongLoader.getSongFromPlaylist(context, playlist.getmId());
+                ShowLog.logInfo("size " + playlist.getmName(), playlist.getmCount());
+                for (Song song : songs) {
+                    ShowLog.logInfo(playlist.getmName(), song.getNameVi());
+                }
+            }
+        } else {
+            ShowLog.logInfo("playlist", "null");
+        }
+    }
+
 }

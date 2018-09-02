@@ -36,8 +36,12 @@ public class AndtUtils {
                 null);
 
         if (cursor.moveToFirst()) {
-            return cursor.getLong(0);
+            long count = cursor.getLong( 0);
+            cursor.close();
+
+            return count;
         }
+
         //return cursor.getLong(0);
         return 0;
     }
@@ -59,6 +63,7 @@ public class AndtUtils {
             return false;
         }
 
+        cursor.close();
         ContentValues contentValues = new ContentValues(1);
         contentValues.put(MediaStore.Audio.Playlists.NAME, newName);
 
@@ -69,4 +74,29 @@ public class AndtUtils {
 
         return true;
     }
+
+    public static boolean deletePlaylist(Context context,long playlistId){
+        Uri uri = MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI;
+
+        String where = MediaStore.Audio.Playlists._ID +" =? ";
+        String[] argsClause = {Long.toString(playlistId)};
+        Cursor cursor = context.getContentResolver().query(uri,
+                null,
+                where,
+                argsClause,
+                null);
+
+        if(cursor == null || cursor.getCount() == 0){
+            return false;
+        }
+
+        cursor.close();
+        context.getContentResolver().delete(uri,
+                where,
+                argsClause);
+
+        return true;
+    }
+
+
 }

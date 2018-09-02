@@ -23,7 +23,7 @@ public class Song implements Serializable {
         nameSearch = nameEn.replaceAll(" ","" );
         duration = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
 
-        id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
+        id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
 
         path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
         artistName = cursor.getString(cursor

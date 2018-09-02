@@ -84,7 +84,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 
                 Intent intent = new Intent(context, ForegroundService.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(ForegroundService.POS_KEY, index);
+                intent.putExtra(ForegroundService.POS_KEY, pos);
                 intent.setAction(Action.START_FORE.getName());
 
                 Log.d("AAA", "recycler " + index);

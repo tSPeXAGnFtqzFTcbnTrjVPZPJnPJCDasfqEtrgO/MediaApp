@@ -21,6 +21,7 @@ public class PlaylistSongLoader {
                 songs.add(new Song(cursor,songs.size()));
 
             } while (cursor.moveToNext());
+            cursor.close();
         }
         return songs;
 

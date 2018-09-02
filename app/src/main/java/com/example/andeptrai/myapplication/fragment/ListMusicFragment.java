@@ -1,5 +1,6 @@
 package com.example.andeptrai.myapplication.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,13 +12,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.andeptrai.myapplication.Instance;
+import com.example.andeptrai.myapplication.PlayerActivity;
 import com.example.andeptrai.myapplication.R;
 import com.example.andeptrai.myapplication.adapter.ListMusicAdapter;
+import com.example.andeptrai.myapplication.constant.Action;
 import com.example.andeptrai.myapplication.dialog.ShowPlaylistDialog;
 import com.example.andeptrai.myapplication.function.ShowLog;
 import com.example.andeptrai.myapplication.model.Song;
+import com.example.andeptrai.myapplication.services.ForegroundService;
+import com.example.andeptrai.myapplication.utils.SetListPlay;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -28,6 +34,8 @@ import butterknife.ButterKnife;
 
 public class ListMusicFragment extends Fragment {
 
+    @BindView(R.id.btn_playall)
+    TextView btnPlayAll;
     @BindView(R.id.recycle_song)
     RecyclerView recyclerSong;
     @BindView(R.id.bottom_menu)
@@ -40,6 +48,7 @@ public class ListMusicFragment extends Fragment {
     ImageButton btnRemove;
     @BindView(R.id.btn_add)
     ImageButton btnAdd;
+
     ListMusicAdapter musicAdapter;
 
     ListMusicAdapter.OnLongClickListener onLongClickListener;
@@ -80,11 +89,17 @@ public class ListMusicFragment extends Fragment {
             }
             ShowLog.logInfo("click fragment", position);
         };
-        musicAdapter = new ListMusicAdapter(Instance.songList, getContext(), onLongClickListener,onClickListener);
+        musicAdapter = new ListMusicAdapter(Instance.baseSong, getContext(), onLongClickListener,onClickListener);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerSong.setLayoutManager(layoutManager);
         recyclerSong.setAdapter(musicAdapter);
+
+        ShowLog.logInfo("size listms",Instance.baseSong.size()+"_"+Instance.songList.size() );
+
+        if(musicAdapter.getItemCount()< 1){
+            btnPlayAll.setVisibility(View.GONE);
+        }
 
 
     }
@@ -103,13 +118,24 @@ public class ListMusicFragment extends Fragment {
     }
 
     private void setClick() {
+        btnPlayAll.setOnClickListener(v->{
+            SetListPlay.playAll();
+
+            Intent intent = new Intent(getContext(), ForegroundService.class);
+            intent.putExtra(ForegroundService.POS_KEY, 0);
+            intent.setAction(Action.START_FORE.getName());
+            getContext().startService(intent);
+
+            startActivity(new Intent(getContext(), PlayerActivity.class));
+        });
         btnAdd.setOnClickListener(v -> {
-//            Long[] idsArr;
+
 //            idsArr = songs.toArray(new Long[0]);
 //            ShowPlaylistDialog.newInstance(ArrayUtils.toPrimitive(idsArr))
 //                    .show(getActivity().getSupportFragmentManager(),"ls" );
             ShowPlaylistDialog.newInstance(songs)
                     .show(getActivity().getSupportFragmentManager(),"xx" );
+
             musicAdapter.callAddToPlaylist();
         });
         btnApply.setOnClickListener(v -> {

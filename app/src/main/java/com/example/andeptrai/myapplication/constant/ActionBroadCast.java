@@ -7,7 +7,8 @@ public enum ActionBroadCast {
     PREV(),
     NEXT(),
     STOP(),
-    UPDATE_LIST_SHUFFLE();
+    UPDATE_LIST_SHUFFLE(),
+    UPDATE_PLAYLIST;
 
     private String name;
 

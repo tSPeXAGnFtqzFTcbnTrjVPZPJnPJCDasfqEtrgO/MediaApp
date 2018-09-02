@@ -99,11 +99,13 @@ public class MainActivity extends AppCompatActivity {
                         if(o instanceof DataZip){
                             DataZip dataZip = (DataZip) o;
                             if(dataZip.songs!=null) {
+
                                 Instance.songList.addAll(dataZip.songs);
                             }
                             if(dataZip.songs1!=null) {
                                 Instance.songList.addAll(dataZip.songs1);
                             }
+                            Instance.baseSong.addAll(Instance.songList);
                             Instance.songShuffleList.addAll(Instance.songList);
                             Collections.shuffle(Instance.songShuffleList);
 

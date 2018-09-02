@@ -94,6 +94,7 @@ public class ShowRenamePlaylistDialog extends DialogFragment {
         mPlaylistId = getArguments().getLong(keyPlaylistId);
 
         btnCancel.setOnClickListener(v -> {
+            resetDialog();
             getDialog().dismiss();
         });
         btnOk.setOnClickListener(v -> {
@@ -107,13 +108,21 @@ public class ShowRenamePlaylistDialog extends DialogFragment {
                     if (onComplete != null) {
                         onComplete.complete(s);
                     }
-                    Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
+
+                    resetDialog();
                     getDialog().dismiss();
+                    Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
+
                 }
+
             }
         });
     }
 
+    private void resetDialog(){
+        edit_playlist.setText("");
+        inputLayout.setError("");
+    }
     public ShowRenamePlaylistDialog setOnComplete(OnComplete onComplete) {
         this.onComplete = onComplete;
         return dialog;

@@ -60,7 +60,7 @@ public class ScanFileMp3 {
 
                     String type = cursor.getString(cursor.getColumnIndex(STR_TYPE));
                     String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
-                    //ShowLog.logInfo("inter title", songList.get(songList.size()-1).getNameSearch());
+                    ShowLog.logInfo("inter title", songList.get(songList.size()-1).getNameSearch());
 
 
                     //       ShowLog.logInfo("",

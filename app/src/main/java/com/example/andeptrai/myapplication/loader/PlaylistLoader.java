@@ -25,8 +25,12 @@ public class PlaylistLoader {
                 int count = AndtUtils.countSongInPlaylist(context,id );
 
                 long duration = AndtUtils.getDurationPlaylist(context,id );
-                playlists.add(new Playlist(id,count,name,duration));
+                Playlist playlist = new Playlist(id,count,name,duration);
+
+                playlist.pushFirstTime(PlaylistSongLoader.getSongFromPlaylist(context,id ));
+                playlists.add(playlist);
             }while (cursor.moveToNext());
+            cursor.close();
         }
 
         return playlists;

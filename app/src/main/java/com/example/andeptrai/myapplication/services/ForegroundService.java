@@ -18,6 +18,7 @@ import android.widget.RemoteViews;
 
 import com.example.andeptrai.myapplication.Instance;
 import com.example.andeptrai.myapplication.MainActivity;
+import com.example.andeptrai.myapplication.PlayerActivity;
 import com.example.andeptrai.myapplication.R;
 import com.example.andeptrai.myapplication.constant.Action;
 import com.example.andeptrai.myapplication.constant.ActionBroadCast;
@@ -286,7 +287,7 @@ public class ForegroundService extends Service {
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
 
-        noificationMainIntent = new Intent(this, MainActivity.class);
+        noificationMainIntent = new Intent(this, PlayerActivity.class);
         noificationMainIntent.setAction(Action.MAIN.getName());
         noificationMainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         mainPending = PendingIntent.getActivity(this, REQUEST_CODE, noificationMainIntent, 0);
