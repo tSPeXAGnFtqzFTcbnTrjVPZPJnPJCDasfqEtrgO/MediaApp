@@ -1,6 +1,7 @@
 package com.example.andeptrai.myapplication.dialog;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import android.widget.Button;
 
 import com.example.andeptrai.myapplication.Instance;
 import com.example.andeptrai.myapplication.R;
+import com.example.andeptrai.myapplication.constant.ActionBroadCast;
 import com.example.andeptrai.myapplication.function.MusicPlayer;
 import com.example.andeptrai.myapplication.function.ShowLog;
 import com.example.andeptrai.myapplication.model.Playlist;
@@ -100,9 +102,14 @@ public class ShowAddPlaylistDialog extends DialogFragment {
                 if (id == -1) {
                     inputLayout.setError("Playlist da ton tai");
                 } else {
-                    Instance.playlists.add(new Playlist(id, 1, s));
+                    Instance.playlists.add(new Playlist(id, 0, s));
                     Instance.playlists.get(Instance.playlists.size() - 1).
                             addSongArray(getContext(), mSongs);
+
+                    Intent intent = new Intent();
+                    intent.setAction(ActionBroadCast.UPDATE_PLAYLIST.getName());
+                    getContext().sendBroadcast(intent);
+
                     getDialog().dismiss();
                 }
             }

@@ -72,7 +72,6 @@ public class Playlist {
 
             MusicPlayer.addToPlaylist(context,ids , mId);
 
-            loadPlaylist(context);
         }
     }
     public void addSongArray(Context context,ArrayList<Song> songs){
@@ -92,22 +91,6 @@ public class Playlist {
             this.songs.add(song);
             totalDuration += song.getDuration();
             mCount++;
-        }
-    }
-
-    private void loadPlaylist(Context context) {
-        ArrayList<Playlist> playlists = PlaylistLoader.load(context);
-        if (playlists != null) {
-            Instance.playlists.addAll(playlists);
-            for (Playlist playlist : playlists) {
-                ArrayList<Song> songs = PlaylistSongLoader.getSongFromPlaylist(context, playlist.getmId());
-                ShowLog.logInfo("size " + playlist.getmName(), playlist.getmCount());
-                for (Song song : songs) {
-                    ShowLog.logInfo(playlist.getmName(), song.getNameVi());
-                }
-            }
-        } else {
-            ShowLog.logInfo("playlist", "null");
         }
     }
 

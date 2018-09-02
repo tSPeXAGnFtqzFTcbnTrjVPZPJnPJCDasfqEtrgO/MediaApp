@@ -51,6 +51,19 @@ public class PlayListFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onStart() {
+        register();
+        super.onStart();
+
+    }
+
+    @Override
+    public void onStop() {
+        unregister();
+        super.onStop();
+    }
+
     private void init(){
 
         ShowLog.logInfo("size pp", Instance.playlists.size() );
@@ -148,8 +161,8 @@ public class PlayListFragment extends Fragment {
 
                 String action = intent.getAction();
                 if(action.equals(ActionBroadCast.UPDATE_PLAYLIST.getName())){
-                    ShowLog.logInfo("receiver","update" );
                     playlistFragmentAdapter.notifyDataSetChanged();
+                    ShowLog.logInfo("receiver","update" + playlistFragmentAdapter.getItemCount());
                 }
 
             }
