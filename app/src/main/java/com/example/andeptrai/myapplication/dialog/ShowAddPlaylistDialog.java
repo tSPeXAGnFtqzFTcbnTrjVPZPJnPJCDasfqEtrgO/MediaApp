@@ -98,7 +98,7 @@ public class ShowAddPlaylistDialog extends DialogFragment {
             String s = edit_playlist.getText().toString();
             if (s != null && s.length() > 0) {
                 int id = MusicPlayer.createPlaylist(getContext(), s);
-                ShowLog.logInfo("id create", id );
+                ShowLog.logInfo("id create", id);
                 if (id == -1) {
                     inputLayout.setError("Playlist da ton tai");
                 } else {

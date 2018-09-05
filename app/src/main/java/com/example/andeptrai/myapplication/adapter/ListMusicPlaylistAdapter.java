@@ -8,10 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
 import com.example.andeptrai.myapplication.DetailPlaylistActivity;
+import com.example.andeptrai.myapplication.Instance;
 import com.example.andeptrai.myapplication.PlayerActivity;
 import com.example.andeptrai.myapplication.R;
 import com.example.andeptrai.myapplication.constant.Action;
@@ -79,6 +81,9 @@ public class ListMusicPlaylistAdapter extends RecyclerView.Adapter<ListMusicPlay
         holder.txtvName.setText(GetSongName.getSongName(mSongs.get(position)));
         holder.txtvArtist.setText(mSongs.get(position).getArtistName());
 
+        if(Instance.mapImageAlbum.containsKey(mSongs.get(position).getAlbumId())){
+            holder.imgAlbum.setImageBitmap(Instance.mapImageAlbum.get(mSongs.get(position).getAlbumId()));
+        }
         if (isSelect) {
             ShowLog.logVar("check", "" + mSongs.get(position).getNameEn() + "_" + checkList.get(position));
 
@@ -103,11 +108,14 @@ public class ListMusicPlaylistAdapter extends RecyclerView.Adapter<ListMusicPlay
         TextView txtvName;
         @BindView(R.id.txtv_artist)
         TextView txtvArtist;
-
+        @BindView(R.id.img_album)
+        ImageView imgAlbum;
 
         Holder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            txtvName.setSelected(true);
 
             itemView.setTag(getLayoutPosition());
 

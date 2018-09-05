@@ -218,11 +218,13 @@ public class ForegroundService extends Service {
         do {
 
 
-            if (isEnd && isRepeat) {//repeat if end of song (false when event next-prev-start
-                if (pos == 0) {
-                    pos = Instance.songList.size();
+            if (isEnd) {//repeat if end of song (false when event next-prev-start
+                if (isRepeat) {
+                    if (pos == 0) {
+                        pos = Instance.songList.size();
+                    }
+                    pos--;
                 }
-                pos--;
             }
 
             if (isShuffle) {

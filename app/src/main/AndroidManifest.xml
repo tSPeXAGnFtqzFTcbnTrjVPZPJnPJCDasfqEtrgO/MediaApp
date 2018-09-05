@@ -3,7 +3,7 @@
     package="com.example.andeptrai.myapplication">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -23,8 +23,9 @@
 
         <service android:name=".services.ForegroundService" />
 
-        <activity android:name=".PlayerActivity"></activity>
-        <activity android:name=".DetailPlaylistActivity"></activity>
+        <activity android:name=".PlayerActivity" />
+        <activity android:name=".DetailPlaylistActivity" />
+        <activity android:name=".DetailAlbumActivity"></activity>
     </application>
 
 </manifest>

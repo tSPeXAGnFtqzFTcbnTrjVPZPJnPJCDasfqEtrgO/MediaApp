@@ -10,8 +10,10 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.andeptrai.myapplication.function.ShowLog;
+import com.example.andeptrai.myapplication.loader.AlbumLoader;
 import com.example.andeptrai.myapplication.loader.PlaylistLoader;
 import com.example.andeptrai.myapplication.loader.PlaylistSongLoader;
+import com.example.andeptrai.myapplication.model.Album;
 import com.example.andeptrai.myapplication.model.Playlist;
 import com.example.andeptrai.myapplication.model.Song;
 
@@ -25,6 +27,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function3;
+import io.reactivex.functions.Function4;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.example.andeptrai.myapplication.Instance.playlists;
@@ -47,11 +50,14 @@ enum Type {
 class DataZip {
     public ArrayList<Song> songs,songs1;
     public ArrayList<Playlist> playlists;
+    public ArrayList<Album> albums;
 
-    public DataZip(ArrayList<Song> songs, ArrayList<Song> songs1, ArrayList<Playlist> playlists) {
+    public DataZip(ArrayList<Song> songs, ArrayList<Song> songs1, ArrayList<Playlist> playlists,
+                   ArrayList<Album> albums) {
         this.songs = songs;
         this.songs1 = songs1;
         this.playlists = playlists;
+        this.albums = albums;
     }
 }
 public class MainActivity extends AppCompatActivity {
@@ -85,8 +91,9 @@ public class MainActivity extends AppCompatActivity {
 
         Observable
                 .zip(getObservableListMp3(Type.EXTERNAL), getObservableListMp3(Type.INTERNAL), getObservablePlaylist(),
-                        (Function3<ArrayList<Song>, ArrayList<Song>, ArrayList<Playlist>, Object>)
-                                (songs, songs2, playlists) -> new DataZip(songs,songs2,playlists))
+                        getObservableAlbum(),
+                        (Function4<ArrayList<Song>, ArrayList<Song>, ArrayList<Playlist>,ArrayList<Album>, Object>)
+                                (songs, songs2, playlists,albums) -> new DataZip(songs,songs2,playlists,albums))
                 .subscribe(new Observer<Object>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -109,8 +116,11 @@ public class MainActivity extends AppCompatActivity {
                             Instance.songShuffleList.addAll(Instance.songList);
                             Collections.shuffle(Instance.songShuffleList);
 
-                            playlists.clear();
-                            playlists.addAll(dataZip.playlists);
+                            Instance.playlists.addAll(dataZip.playlists);
+                            Instance.albums.addAll(dataZip.albums);
+
+
+
 
                         }
                     }
@@ -265,5 +275,8 @@ public class MainActivity extends AppCompatActivity {
     private Observable<ArrayList<Playlist>> getObservablePlaylist(){
         return Observable.just(loadPlaylist());
         //return Observable.defer(()->Observable.just(loadPlaylist()));
+    }
+    private Observable<ArrayList<Album>> getObservableAlbum(){
+        return Observable.just(AlbumLoader.load(getApplicationContext()));
     }
 }

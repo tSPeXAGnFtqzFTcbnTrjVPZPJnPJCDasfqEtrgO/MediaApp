@@ -34,6 +34,9 @@ public class ViewPagerAdapter extends FragmentPagerAdapter{
                 return "Song";
             }
             case 1:{
+                return "Album";
+            }
+            case 2:{
                 return "Playlist";
             }
         }

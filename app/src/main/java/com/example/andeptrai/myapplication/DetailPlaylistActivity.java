@@ -84,10 +84,10 @@ public class DetailPlaylistActivity extends AppCompatActivity {
             songs.clear();
 
 
-            for (int i = 0; i < Instance.playlists.get(position).getSongs().size(); i++) {
+            for (int i = 0; i < Instance.playlists.get(this.position).getSongs().size(); i++) {
                 if (checkList.get(i)) {
                     //songs.add(Instance.songList.get(i).getId());
-                    songs.add(Instance.playlists.get(position).getSongs().get(i));
+                    songs.add(Instance.playlists.get(this.position).getSongs().get(i));
                 }
             }
 

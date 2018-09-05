@@ -31,6 +31,17 @@ public class SetListPlay {
         Instance.songList.add(Instance.playlists.get(posPlaylist).getSongs().get(position) );
         Instance.songShuffleList.addAll(Instance.songList);
     }
+    public static void playAllInAlbum(int posAlbum){
+        clear();
+
+        Instance.songList.addAll(Instance.albums.get(posAlbum).getSongs());
+        Instance.songShuffleList.addAll(Instance.songList);
+    }
+    public static void playOneInAlbums(int posAlbum,int position){
+        clear();
+        Instance.songList.add(Instance.albums.get(posAlbum).getSongs().get(position) );
+        Instance.songShuffleList.addAll(Instance.songList);
+    }
     public static void playOneInAll(int position){
         clear();
 

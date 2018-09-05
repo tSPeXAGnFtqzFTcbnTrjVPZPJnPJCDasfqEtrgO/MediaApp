@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import com.example.andeptrai.myapplication.adapter.ListMusicAdapter;
 import com.example.andeptrai.myapplication.adapter.SongAdapter;
 import com.example.andeptrai.myapplication.adapter.ViewPagerAdapter;
+import com.example.andeptrai.myapplication.fragment.AlbumFragment;
 import com.example.andeptrai.myapplication.fragment.ListMusicFragment;
 import com.example.andeptrai.myapplication.fragment.PlayListFragment;
 
@@ -42,6 +43,7 @@ public class ListMusicActivity extends AppCompatActivity {
 
     private void init() {
         fragments.add(new ListMusicFragment());
+        fragments.add(new AlbumFragment());
         fragments.add(new PlayListFragment());
         pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), fragments);
         pager.setAdapter(pagerAdapter);
