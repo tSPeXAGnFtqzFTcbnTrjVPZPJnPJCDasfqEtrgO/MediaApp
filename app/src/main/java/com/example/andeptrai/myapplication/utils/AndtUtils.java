@@ -7,6 +7,9 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 
+import com.example.andeptrai.myapplication.Instance;
+import com.example.andeptrai.myapplication.function.ShowLog;
+
 public class AndtUtils {
     public static int countSongInPlaylist(Context context,long playlistId){
         Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external",playlistId);
@@ -99,4 +102,37 @@ public class AndtUtils {
     }
 
 
+    public static void deleteSongPlaylist(Context context, long idPlaylist, long[] idSong, int positionPlaylist) {
+        if (Instance.playlists.get(positionPlaylist).getSongs().size() == idSong.length) {
+            deletePlaylist(context, idPlaylist);
+            return;
+        }
+
+        Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", idPlaylist);
+
+        String where = MediaStore.Audio.Playlists.Members.AUDIO_ID + " =? ";
+
+        String[] argsClause = new String[idSong.length];
+        for (int i = 0; i < idSong.length; i++) {
+            argsClause[i] = String.valueOf(idSong[i]);
+        }
+
+        Cursor cursor = context.getContentResolver().query(uri,
+                null,
+                where,
+                argsClause,
+                null
+        );
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        int cnt = context.getContentResolver().delete(uri,
+                where,
+                argsClause);
+
+        ShowLog.logInfo("cnt del", cnt);
+
+    }
 }

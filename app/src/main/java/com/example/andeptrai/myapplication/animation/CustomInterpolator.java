@@ -1,4 +1,4 @@
-package com.example.andeptrai.myapplication.Animation;
+package com.example.andeptrai.myapplication.animation;
 
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.view.animation.Interpolator;

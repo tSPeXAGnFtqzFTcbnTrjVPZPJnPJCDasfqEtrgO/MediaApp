@@ -53,6 +53,9 @@ public class PlayListFragment extends Fragment {
 
     @Override
     public void onStart() {
+        if(playlistFragmentAdapter!=null){
+            playlistFragmentAdapter.notifyDataSetChanged();
+        }
         register();
         super.onStart();
 

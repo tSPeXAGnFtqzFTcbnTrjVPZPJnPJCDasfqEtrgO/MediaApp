@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.example.andeptrai.myapplication.Animation.CustomAnimation;
+import com.example.andeptrai.myapplication.animation.CustomAnimation;
 import com.example.andeptrai.myapplication.R;
 
 public class DiscFragment extends Fragment {

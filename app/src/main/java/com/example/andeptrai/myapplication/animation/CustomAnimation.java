@@ -1,4 +1,4 @@
-package com.example.andeptrai.myapplication.Animation;
+package com.example.andeptrai.myapplication.animation;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;

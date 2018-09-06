@@ -4,13 +4,14 @@ import android.database.Cursor;
 import android.provider.MediaStore;
 
 import com.example.andeptrai.myapplication.function.ConvertLanguage;
+import com.example.andeptrai.myapplication.function.ShowLog;
 
 import java.io.Serializable;
 
 public class Song implements Serializable {
     private String nameVi,path,artistName,albumName,nameEn;
     private String nameSearch;
-    private long id,artistId,albumId;
+    private long id,idInPlaylist,artistId,albumId;
     private int duration;
     private int position;
 
@@ -24,6 +25,12 @@ public class Song implements Serializable {
         duration = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
 
         id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
+
+        try {
+            idInPlaylist = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Playlists.Members.AUDIO_ID));
+        }catch (Exception e){
+            idInPlaylist = -1;
+        }
 
         path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
         artistName = cursor.getString(cursor
@@ -83,5 +90,9 @@ public class Song implements Serializable {
 
     public int getDuration() {
         return duration;
+    }
+
+    public long getIdInPlaylist() {
+        return idInPlaylist;
     }
 }

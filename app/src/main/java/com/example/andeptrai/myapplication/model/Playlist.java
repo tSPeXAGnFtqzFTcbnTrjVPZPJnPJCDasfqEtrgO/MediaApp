@@ -86,6 +86,7 @@ public class Playlist {
 
     public void pushFirstTime(ArrayList<Song> songs) {
         totalDuration = mCount = 0;
+        this.songs.clear();
         for (Song song : songs) {
             markId.put(song.getId(), songs.size());
             this.songs.add(song);
