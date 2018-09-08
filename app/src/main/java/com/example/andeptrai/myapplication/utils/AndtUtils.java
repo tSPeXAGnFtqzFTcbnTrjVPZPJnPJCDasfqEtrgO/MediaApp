@@ -135,4 +135,86 @@ public class AndtUtils {
         ShowLog.logInfo("cnt del", cnt);
 
     }
+    public static boolean renameSong(Context context, long songId, String newName) {
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+
+        Cursor cursor = context.getContentResolver().query(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                null,
+                MediaStore.Audio.Media._ID + " =? ",
+                new String[]{String.valueOf(songId)},
+                null);
+
+        if (cursor == null) {
+            return false;
+        }
+        if (cursor.getCount() == 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+
+        ContentValues contentValues = new ContentValues(1);
+        contentValues.put(MediaStore.Audio.Media.TITLE, newName);
+        context.getContentResolver().update(uri,
+                contentValues,
+                MediaStore.Audio.Media._ID + " =? ",
+                new String[]{String.valueOf(songId)});
+        return true;
+    }
+    public static boolean renameAlbum(Context context, long albumId, String newName) {
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+
+        Cursor cursor = context.getContentResolver().query(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                null,
+                MediaStore.Audio.Media.ALBUM_ID + " =? ",
+                new String[]{String.valueOf(albumId)},
+                null);
+
+        if (cursor == null) {
+            return false;
+        }
+        if (cursor.getCount() == 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+
+        ContentValues contentValues = new ContentValues(1);
+        contentValues.put(MediaStore.Audio.Media.ALBUM, newName);
+        context.getContentResolver().update(uri,
+                contentValues,
+                MediaStore.Audio.Media.ALBUM_ID + " =? ",
+                new String[]{String.valueOf(albumId)});
+        return true;
+    }
+    public static boolean renameArtist(Context context, long artistId, String newName) {
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+
+        Cursor cursor = context.getContentResolver().query(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                null,
+                MediaStore.Audio.Media.ARTIST_ID + " =? ",
+                new String[]{String.valueOf(artistId)},
+                null);
+
+        if (cursor == null) {
+            return false;
+        }
+        if (cursor.getCount() == 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+
+        ContentValues contentValues = new ContentValues(1);
+        contentValues.put(MediaStore.Audio.Media.ARTIST, newName);
+        context.getContentResolver().update(uri,
+                contentValues,
+                MediaStore.Audio.Media.ARTIST_ID + " =? ",
+                new String[]{String.valueOf(artistId)});
+        return true;
+    }
+
 }

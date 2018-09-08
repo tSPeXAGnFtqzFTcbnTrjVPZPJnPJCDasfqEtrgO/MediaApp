@@ -69,8 +69,8 @@ public class DetailPlaylistActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         Intent intent = getIntent();
-        if(intent!=null){
-            position = intent.getIntExtra(keyPositionPlaylist,0 );
+        if (intent != null) {
+            position = intent.getIntExtra(keyPositionPlaylist, 0);
         }
 
         init();
@@ -101,13 +101,13 @@ public class DetailPlaylistActivity extends AppCompatActivity {
 
             ShowLog.logInfo("click fragment", position);
         };
-        musicAdapter = new ListMusicPlaylistAdapter(Instance.playlists.get(position).getSongs(),position, DetailPlaylistActivity.this, onLongClickListener, onClickListener);
+        musicAdapter = new ListMusicPlaylistAdapter(Instance.playlists.get(position).getSongs(), position, DetailPlaylistActivity.this, onLongClickListener, onClickListener);
         LinearLayoutManager layoutManager = new LinearLayoutManager(DetailPlaylistActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerSong.setLayoutManager(layoutManager);
         recyclerSong.setAdapter(musicAdapter);
 
-        ShowLog.logInfo("detail pp", Instance.playlists.get(position).getSongs().size() );
+        ShowLog.logInfo("detail pp", Instance.playlists.get(position).getSongs().size());
 
         if (musicAdapter.getItemCount() < 0) {
             btnPlayAll.setVisibility(View.GONE);
@@ -169,7 +169,7 @@ public class DetailPlaylistActivity extends AppCompatActivity {
             ids[i] = songs.get(i).getIdInPlaylist();
         }
 
-        ShowLog.logInfo("prepare complete",null );
+        ShowLog.logInfo("prepare complete", null);
 
         Completable.fromCallable((Callable<Void>) () -> {
             AndtUtils.deleteSongPlaylist(getApplicationContext(),
@@ -186,13 +186,14 @@ public class DetailPlaylistActivity extends AppCompatActivity {
             @Override
             public void onComplete() {
                 if (songs.size() == Instance.playlists.get(position).getSongs().size()) {
-
+                        Instance.playlists.remove(position);
+                        finish();
                 } else {
                     Instance.playlists.get(position).pushFirstTime(
                             PlaylistSongLoader.getSongFromPlaylist(getApplicationContext(),
                                     Instance.playlists.get(position).getmId()));
 
-                    ShowLog.logInfo("num song after del",Instance.playlists.get(position).getSongs().size() );
+                    ShowLog.logInfo("num song after del", Instance.playlists.get(position).getSongs().size());
                     showBottomMenu(false);
                     musicAdapter.callApply();
                 }

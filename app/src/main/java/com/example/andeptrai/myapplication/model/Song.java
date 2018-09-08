@@ -43,6 +43,11 @@ public class Song implements Serializable {
                 .getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
 
     }
+    public void setNameVi(String nameVi) {
+        this.nameVi = nameVi;
+        nameEn = ConvertLanguage.convert(nameVi);
+        nameSearch = nameEn.replaceAll(" ", "");
+    }
 
     public String getNameVi() {
         return nameVi;
