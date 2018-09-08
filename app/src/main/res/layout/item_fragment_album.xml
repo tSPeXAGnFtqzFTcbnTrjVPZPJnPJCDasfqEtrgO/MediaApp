@@ -2,13 +2,16 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="70dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#f0f0">
+    android:layout_margin="@dimen/margin_item"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
         android:id="@+id/img_album"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        app:layout_constraintDimensionRatio="1:1"
+        android:padding="@dimen/padding_icon"
+        android:background="@drawable/ic_default_album"
         android:scaleType="fitXY"
         app:layout_constraintHorizontal_weight="2"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
@@ -21,6 +24,7 @@
         android:id="@+id/view_group"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_margin="@dimen/margin_item"
         app:layout_constraintHorizontal_weight="8"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/img_album"
@@ -30,7 +34,7 @@
         <TextView
             android:id="@+id/txtv_name"
             android:text="aaaaaaaaaaaaaaaa"
-            android:textSize="20sp"
+            android:textSize="@dimen/title"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:gravity="fill_vertical"
@@ -43,8 +47,8 @@
         <TextView
             android:id="@+id/txtv_amount_song"
             android:text="aaaaaaaaaaaaaaaa"
-            android:textSize="15sp"
-            android:gravity="fill_vertical"
+            android:textSize="@dimen/artist"
+            android:gravity="bottom"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintVertical_weight="3"

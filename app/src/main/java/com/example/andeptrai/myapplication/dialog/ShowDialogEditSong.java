@@ -126,7 +126,10 @@ public class ShowDialogEditSong extends DialogFragment {
                 }
             }
             if (!artist.isEmpty() && artist.compareTo(song.getAlbumName()) != 0) {
-                AndtUtils.renameArtist(getContext(), song.getArtistId(), artist);
+
+                if(AndtUtils.renameArtist(getContext(), song.getArtistId(), artist)){
+                    Instance.baseSong.get(position).setArtistName(artist);
+                }
             }
             if (!album.isEmpty() && album.compareTo(song.getAlbumName()) != 0) {
                 AndtUtils.renameAlbum(getContext(), song.getAlbumId(), album);

@@ -49,6 +49,10 @@ public class Song implements Serializable {
         nameSearch = nameEn.replaceAll(" ", "");
     }
 
+    public void setArtistName(String artistName) {
+        this.artistName = artistName;
+    }
+
     public String getNameVi() {
         return nameVi;
     }

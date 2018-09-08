@@ -52,6 +52,7 @@ public class ListMusicAlbumAdapter extends RecyclerView.Adapter<ListMusicAlbumAd
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
         holder.txtvName.setText(GetSongName.getSongName(songs.get(position)));
+        holder.txtvArtist.setText(songs.get(position).getArtistName());
 
     }
 
@@ -63,6 +64,8 @@ public class ListMusicAlbumAdapter extends RecyclerView.Adapter<ListMusicAlbumAd
     class Holder extends RecyclerView.ViewHolder{
         @BindView(R.id.txtv_name)
         TextView txtvName;
+        @BindView(R.id.txtv_artist)
+        TextView txtvArtist;
 
         public Holder(View itemView) {
             super(itemView);

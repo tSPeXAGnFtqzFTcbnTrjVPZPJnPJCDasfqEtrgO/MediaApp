@@ -115,6 +115,7 @@ public class ListMusicAdapter extends RecyclerView.Adapter<ListMusicAdapter.Hold
             ButterKnife.bind(this, itemView);
 
             txtvName.setSelected(true);
+            txtvArtist.setSelected(true);
 
             itemView.setTag(getLayoutPosition());
 

@@ -107,13 +107,14 @@ public class ListMusicFragment extends Fragment {
         onClickListener = (view, position, numSelect, checkList) -> {
             if (numSelect == 1) {
                 btnEdit.setVisibility(View.VISIBLE);
-                positionEdit = position;
+
             } else {
                 btnEdit.setVisibility(View.GONE);
             }
             songs.clear();
             for (int i = 0; i < Instance.songList.size(); i++) {
                 if (checkList.get(i)) {
+                    positionEdit = i;
                     //songs.add(Instance.songList.get(i).getId());
                     songs.add(Instance.songList.get(i));
                 }

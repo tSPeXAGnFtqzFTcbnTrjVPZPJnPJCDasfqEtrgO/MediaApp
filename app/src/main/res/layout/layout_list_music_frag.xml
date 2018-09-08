@@ -18,7 +18,6 @@
         app:layout_constraintBottom_toTopOf="@id/recycle_song"
         app:layout_constraintLeft_toLeftOf="parent"/>
     <android.support.v7.widget.RecyclerView
-        android:background="#ff4"
         android:id="@+id/recycle_song"
         android:layout_width="match_parent"
         android:layout_height="0dp"

@@ -70,6 +70,8 @@ public class AlbumFragmentAdapter extends RecyclerView.Adapter<AlbumFragmentAdap
             super(itemView);
             ButterKnife.bind(this,itemView);
 
+            txtvName.setSelected(true);
+
             itemView.setOnClickListener(v->{
                 int position = getLayoutPosition();
                 onClickItem.onClick(v, position);
