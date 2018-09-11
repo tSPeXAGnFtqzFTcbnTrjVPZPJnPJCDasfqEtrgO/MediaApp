@@ -60,7 +60,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.Holder> {
         TextView name;
         Holder(View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.item_name);
+            name = itemView.findViewById(R.id.txtv_name);
 
             itemView.setOnClickListener(v -> {
 

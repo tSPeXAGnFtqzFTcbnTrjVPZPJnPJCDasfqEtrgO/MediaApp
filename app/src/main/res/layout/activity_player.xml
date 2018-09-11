@@ -21,7 +21,8 @@
         android:marqueeRepeatLimit ="marquee_forever"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:scrollHorizontally="true" />
+        android:scrollHorizontally="true"
+        android:visibility="gone"/>
     <TextView
         android:text="NULL"
         android:textSize="20sp"
@@ -33,7 +34,8 @@
         android:marqueeRepeatLimit ="marquee_forever"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:scrollHorizontally="true"/>
+        android:scrollHorizontally="true"
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

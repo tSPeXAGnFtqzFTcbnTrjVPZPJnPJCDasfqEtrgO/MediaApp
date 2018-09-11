@@ -3,8 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:layout_margin="@dimen/margin_item"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/background_item_music">
 
     <CheckBox
         android:id="@+id/check_item"

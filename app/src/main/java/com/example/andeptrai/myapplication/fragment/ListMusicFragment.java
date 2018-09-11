@@ -98,6 +98,7 @@ public class ListMusicFragment extends Fragment {
     }
 
     private void init() {
+        btnRemove.setVisibility(View.GONE);
         intentFilter.addAction(actionNotify);
 
         onLongClickListener = (view, posion) -> {
@@ -110,6 +111,11 @@ public class ListMusicFragment extends Fragment {
 
             } else {
                 btnEdit.setVisibility(View.GONE);
+            }
+            if(numSelect>0){
+                btnAdd.setVisibility(View.VISIBLE);
+            }else{
+                btnAdd.setVisibility(View.GONE);
             }
             songs.clear();
             for (int i = 0; i < Instance.songList.size(); i++) {
