@@ -26,7 +26,10 @@ public class Album {
 
         this.songs.addAll(songs);
 
-        Instance.mapImageAlbum.put(mId,bitmapAlbum );
+
+        if(bitmapAlbum!=null) {
+            Instance.mapImageAlbum.put(mId, bitmapAlbum);
+        }
     }
 
     public String getPathImage() {

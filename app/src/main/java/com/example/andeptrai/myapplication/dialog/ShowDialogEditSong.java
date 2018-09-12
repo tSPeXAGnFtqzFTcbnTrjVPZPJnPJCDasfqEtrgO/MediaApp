@@ -90,7 +90,7 @@ public class ShowDialogEditSong extends DialogFragment {
 
         Dialog dialog = getDialog();
         if (dialog != null) {
-            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, 400);
+            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, 500);
         }
     }
 

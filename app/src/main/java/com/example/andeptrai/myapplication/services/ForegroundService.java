@@ -40,6 +40,7 @@ public class ForegroundService extends Service {
     public final static String SONG_ID = "SONG_ID";
     public final static String SHUFFLE_KEY = "SHUFFLE_KEY";
     public final static String REPEAT_KEY = "REPEAT_KEY";
+    public final static String ALBUM_KEY = "ALBUM_KEY";
     public final static String UPDATE_PROGRESS = "UPDATE_PROGRESS";
     public final static String PAUSE = "PAUSE";
     public final static String PLAY = "PLAY";
@@ -380,6 +381,7 @@ public class ForegroundService extends Service {
                         intentUpdateBroadcast.putExtra(SONG_ID, pos);
                         intentUpdateBroadcast.putExtra(NAME_SONG, currentSong.getNameVi());
                         intentUpdateBroadcast.putExtra(NAME_ARTIST, currentSong.getArtistName());
+                        intentUpdateBroadcast.putExtra(ALBUM_KEY,currentSong.getAlbumId() );
                         try {
                             intentUpdateBroadcast.putExtra(CUR_TIME_KEY, mediaPlayer.getCurrentPosition());
                             intentUpdateBroadcast.putExtra(TOTAL_TIME_KEY, mediaPlayer.getDuration());
