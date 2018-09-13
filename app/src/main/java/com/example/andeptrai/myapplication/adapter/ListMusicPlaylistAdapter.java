@@ -83,7 +83,10 @@ public class ListMusicPlaylistAdapter extends RecyclerView.Adapter<ListMusicPlay
 
         if(Instance.mapImageAlbum.containsKey(mSongs.get(position).getAlbumId())){
             holder.imgAlbum.setImageBitmap(Instance.mapImageAlbum.get(mSongs.get(position).getAlbumId()));
+        }else{
+            holder.imgAlbum.setImageResource(R.drawable.ic_default_music);
         }
+
         if (isSelect) {
             ShowLog.logVar("check", "" + mSongs.get(position).getNameEn() + "_" + checkList.get(position));
 

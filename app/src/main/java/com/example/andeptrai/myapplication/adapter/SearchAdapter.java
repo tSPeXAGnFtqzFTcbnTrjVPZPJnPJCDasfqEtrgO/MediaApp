@@ -14,6 +14,9 @@ import android.widget.TextView;
 
 import com.example.andeptrai.myapplication.Instance;
 import com.example.andeptrai.myapplication.R;
+import com.example.andeptrai.myapplication.adapter.helper.ItemTouchHelperAdapter;
+import com.example.andeptrai.myapplication.adapter.helper.ItemTouchHelperViewHolder;
+import com.example.andeptrai.myapplication.function.ShowLog;
 import com.example.andeptrai.myapplication.services.ForegroundService;
 import com.example.andeptrai.myapplication.constant.Action;
 import com.example.andeptrai.myapplication.function.Kmp;
@@ -23,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 
-public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> implements Filterable {
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> implements Filterable,ItemTouchHelperAdapter {
 
     ArrayList<Song> songs;
     ArrayList<Song> baseSongs;
@@ -34,9 +37,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
     boolean isShuffle = false;
 
     public SearchAdapter(ArrayList<Song> songs, Context context) {
+
         this.songs = songs;
         this.baseSongs = songs;
-        this.shuffleSongs = songs;
         this.context = context;
     }
 
@@ -44,18 +47,21 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.item_search, parent, false);
+        View view = inflater.inflate(R.layout.item_search,parent,false );
 
         return new Holder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
-        if (Locale.getDefault().getLanguage().equals("vi")) {
+        if(Locale.getDefault().getLanguage().equals("vi")){
             holder.txtvName.setText(songs.get(position).getNameVi());
-        } else {
+        }else{
             holder.txtvName.setText(songs.get(position).getNameEn());
         }
+//        holder.itemView.setBackgroundResource(R.drawable.background_item_music);
+
+
     }
 
     @Override
@@ -68,10 +74,45 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
         return itemFilter;
     }
 
-    class Holder extends RecyclerView.ViewHolder {
+    @Override
+    public boolean onItemMove(int from, int to) {
+        if (from < to) {
+            for (int i = from; i < to; i++) {
+                Collections.swap(songs, i, i + 1);
+            }
+        } else {
+            for (int i = from; i > to; i--) {
+                Collections.swap(songs, i, i - 1);
+            }
+        }
+
+        notifyItemMoved(from, to);
+        return true;
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        songs.remove(position);
+        notifyItemRemoved(position);
+        notifyDataSetChanged();
+    }
+
+    class Holder extends RecyclerView.ViewHolder  implements ItemTouchHelperViewHolder {
+
+
+        @Override
+        public void onItemSelected() {
+            ShowLog.logInfo("adaptr","itemselect" );
+            //itemView.setBackgroundColor(Color.LTGRAY);
+        }
+
+        @Override
+        public void onItemClear() {
+            ShowLog.logInfo("adaptr","itemclear" );
+            itemView.setBackgroundResource(R.drawable.background_item_music);
+        }
 
         TextView txtvName;
-
         public Holder(View itemView) {
             super(itemView);
             txtvName = itemView.findViewById(R.id.txtv_name);
@@ -82,30 +123,33 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
                 int pos = getLayoutPosition();
                 int index = songs.get(pos).getPosition();
 
-                Intent intent = new Intent(context, ForegroundService.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(ForegroundService.POS_KEY, pos);
+                ShowLog.logInfo("search adapter", songs.size()+"_"+index);
+
+                Intent intent  = new Intent(context, ForegroundService.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(ForegroundService.POS_KEY,pos);
                 intent.setAction(Action.START_FORE.getName());
 
-                Log.d("AAA", "recycler " + index);
+                Log.d("AAA","recycler "+index );
                 context.startService(intent);
             });
 
         }
+
     }
 
-    private class ItemFilter extends Filter {
+    private class ItemFilter extends Filter{
 
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
-            if (charSequence.toString().trim().equals("")) {
+            if(charSequence.toString().trim().equals("")){
                 return null;
             }
             FilterResults results = new FilterResults();
             ArrayList<Song> nlist = new ArrayList<>();
 
-            for (int i = 0; i < baseSongs.size(); i++) {
-                if (Kmp.isMatch(baseSongs.get(i).getNameSearch(), charSequence.toString())) {
+            for(int i = 0; i< baseSongs.size(); i++){
+                if(Kmp.isMatch(baseSongs.get(i).getNameSearch(),charSequence.toString() )){
                     nlist.add(baseSongs.get(i));
                 }
             }
@@ -116,16 +160,16 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            if (filterResults == null) {
+            if(filterResults == null){
                 songs = isShuffle ? shuffleSongs : baseSongs;
-            } else {
+            }else{
                 songs = (ArrayList<Song>) filterResults.values;
             }
             notifyDataSetChanged();
         }
     }
 
-    public void shuffle(boolean isShuffle) {
+    public void shuffle(boolean isShuffle){
 
         this.isShuffle = isShuffle;
 

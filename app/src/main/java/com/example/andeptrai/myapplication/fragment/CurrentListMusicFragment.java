@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.SearchView;
 import com.example.andeptrai.myapplication.Instance;
 import com.example.andeptrai.myapplication.PlayerActivity;
 import com.example.andeptrai.myapplication.R;
+import com.example.andeptrai.myapplication.adapter.helper.SimpleItemTouchHelperCallback;
 import com.example.andeptrai.myapplication.services.ForegroundService;
 import com.example.andeptrai.myapplication.adapter.SearchAdapter;
 import com.example.andeptrai.myapplication.constant.ActionBroadCast;
@@ -73,6 +75,10 @@ public class CurrentListMusicFragment extends Fragment {
         adapterSearch = new SearchAdapter(Instance.songList, getContext());
         listSearch.setLayoutManager(layoutManager);
         listSearch.setAdapter(adapterSearch);
+
+        SimpleItemTouchHelperCallback simpleItemTouchHelperCallback = new SimpleItemTouchHelperCallback(adapterSearch);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchHelperCallback);
+        itemTouchHelper.attachToRecyclerView(listSearch);
 
 
     }

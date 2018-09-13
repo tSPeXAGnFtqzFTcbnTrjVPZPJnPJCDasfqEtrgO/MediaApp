@@ -79,6 +79,7 @@
                 android:id="@+id/txtv_duration"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:gravity="center_vertical"
                 android:layout_weight="1"
 
                 android:text="00:00"
@@ -98,6 +99,7 @@
             <TextView
                 android:id="@+id/txtv_duration_total"
                 android:layout_width="0dp"
+                android:gravity="center_vertical"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="00:00"

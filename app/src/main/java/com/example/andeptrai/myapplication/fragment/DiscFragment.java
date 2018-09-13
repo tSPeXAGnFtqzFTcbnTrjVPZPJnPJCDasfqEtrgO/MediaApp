@@ -42,12 +42,13 @@ public class DiscFragment extends Fragment {
     boolean isRegister = false;
     long albumId = -1;
     long prevId = albumId;
-    String title="",artist="";
+    String title = "", artist = "";
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.layout_frag1,container,false );
-        ButterKnife.bind(this,view );
+        View view = inflater.inflate(R.layout.layout_frag1, container, false);
+        ButterKnife.bind(this, view);
 
         txtvName.setSelected(true);
         txtvArtist.setSelected(true);
@@ -58,19 +59,19 @@ public class DiscFragment extends Fragment {
 
     @Override
     public void onStart() {
-        if(!isRegister){
-            isRegister=true;
+        if (!isRegister) {
+            isRegister = true;
             IntentFilter filter = new IntentFilter();
             filter.addAction(ActionBroadCast.CURSEEK.getName());
-            getContext().registerReceiver(broadcastReceiver,filter );
+            getContext().registerReceiver(broadcastReceiver, filter);
         }
         super.onStart();
     }
 
     @Override
     public void onStop() {
-        if(isRegister){
-            isRegister=false;
+        if (isRegister) {
+            isRegister = false;
             getContext().unregisterReceiver(broadcastReceiver);
         }
         super.onStop();
@@ -87,22 +88,17 @@ public class DiscFragment extends Fragment {
             if (action.equals(ActionBroadCast.CURSEEK.getName())) {
 
                 prevId = albumId;
-                albumId = intent.getLongExtra(ForegroundService.ALBUM_KEY,albumId);
+                albumId = intent.getLongExtra(ForegroundService.ALBUM_KEY, albumId);
                 title = intent.getStringExtra(ForegroundService.NAME_SONG);
                 artist = intent.getStringExtra(ForegroundService.NAME_ARTIST);
 
 
-                ShowLog.logInfo("recieved",albumId + "_" + prevId+"_"+
-                        Instance.mapImageAlbum.containsKey(albumId));
-
-                if(albumId!=prevId){
-
-                    ShowLog.logInfo("received","change " +albumId);
-                    if(Instance.mapImageAlbum.containsKey(albumId)){
+                if (albumId != prevId) {
+                    if (Instance.mapImageAlbum.containsKey(albumId)) {
                         imageView.setImageBitmap(Instance.mapImageAlbum.get(albumId));
 
-                    }else{
-                        ShowLog.logInfo("img disc",null );
+                    } else {
+                        ShowLog.logInfo("img disc", null);
                         imageView.setImageResource(R.drawable.ic_disc);
                     }
 
