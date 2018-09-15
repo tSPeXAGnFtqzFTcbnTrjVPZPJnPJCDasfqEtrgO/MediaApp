@@ -2,6 +2,7 @@ package com.example.andeptrai.myapplication.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,6 +27,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> implements Filterable,ItemTouchHelperAdapter {
 
     ArrayList<Song> songs;
@@ -34,6 +38,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
     Context context;
     ItemFilter itemFilter = new ItemFilter();
 
+    int curPlay;
     boolean isShuffle = false;
 
     public SearchAdapter(ArrayList<Song> songs, Context context) {
@@ -59,7 +64,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
         }else{
             holder.txtvName.setText(songs.get(position).getNameEn());
         }
+        holder.txtvArtist.setText(songs.get(position).getArtistName());
 //        holder.itemView.setBackgroundResource(R.drawable.background_item_music);
+
+        if (position != curPlay) {
+            holder.itemView.setBackgroundResource(R.drawable.background_item_music);
+        } else {
+            holder.itemView.setBackgroundColor(Color.parseColor("#ffd000"));
+        }
+
 
 
     }
@@ -112,11 +125,16 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
             itemView.setBackgroundResource(R.drawable.background_item_music);
         }
 
+        @BindView(R.id.txtv_name)
         TextView txtvName;
+        @BindView(R.id.txtv_artist)
+        TextView txtvArtist;
+
         public Holder(View itemView) {
             super(itemView);
-            txtvName = itemView.findViewById(R.id.txtv_name);
+            ButterKnife.bind(this,itemView );
             txtvName.setSelected(true);
+            txtvArtist.setSelected(true);
 
             itemView.setOnClickListener(v -> {
 
@@ -168,6 +186,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
             notifyDataSetChanged();
         }
     }
+
+    public void setCurPlay(int curPlay) {
+        if (this.curPlay != curPlay) {
+            notifyDataSetChanged();
+            this.curPlay = curPlay;
+        }
+    }
+
 
     public void shuffle(boolean isShuffle){
 

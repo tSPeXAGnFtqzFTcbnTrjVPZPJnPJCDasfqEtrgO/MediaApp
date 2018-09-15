@@ -3,8 +3,9 @@
     <dimen name="toolbar_height">50dp</dimen>
     <dimen name="title">17sp</dimen>
     <dimen name="artist">13sp</dimen>
-    <dimen name="margin_item">0.5dp</dimen>
+    <dimen name="margin_item">2dp</dimen>
     <dimen name="padding_icon">2dp</dimen>
     <dimen name="margin_playall">5dp</dimen>
     <dimen name="appbar_height">40dp</dimen>
+    <dimen name="padding_item">2dp</dimen>
 </resources>
