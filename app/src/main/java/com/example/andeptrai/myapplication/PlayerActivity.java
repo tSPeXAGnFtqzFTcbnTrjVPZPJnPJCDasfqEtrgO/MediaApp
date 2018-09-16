@@ -326,8 +326,8 @@ public class PlayerActivity extends AppCompatActivity {
             intentUpdateListShuffleBroadcast.putExtra(UPDATE_SHUFFLE_KEY, isShuffle);
             sendBroadcast(intentUpdateListShuffleBroadcast);
 
-            shuffleIntent.putExtra(ForegroundService.SHUFFLE_KEY, isShuffle);
-            startService(shuffleIntent);
+//            shuffleIntent.putExtra(ForegroundService.SHUFFLE_KEY, isShuffle);
+//            startService(shuffleIntent);
         });
         btnRepeat.setOnClickListener(v -> {
             //isRepeat = !isRepeat;

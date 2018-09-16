@@ -22,6 +22,7 @@ import com.example.andeptrai.myapplication.PlayerActivity;
 import com.example.andeptrai.myapplication.R;
 import com.example.andeptrai.myapplication.constant.Action;
 import com.example.andeptrai.myapplication.constant.ActionBroadCast;
+import com.example.andeptrai.myapplication.function.FindSong;
 import com.example.andeptrai.myapplication.function.ShowLog;
 import com.example.andeptrai.myapplication.model.Song;
 
@@ -194,6 +195,14 @@ public class ForegroundService extends Service {
         } else if (action.equals(Action.SHUFFLE.getName())) {
             isShuffle = intent.getBooleanExtra(SHUFFLE_KEY, isShuffle);
             ShowLog.logInfo("shuffle", isShuffle);
+
+            if(currentSong!=null){
+                if(isShuffle) {
+                    mPos = FindSong.findPositionById(currentSong.getId(), Instance.songShuffleList);
+                }else{
+                    mPos = FindSong.findPositionById(currentSong.getId(), Instance.songList);
+                }
+            }
         }
 
         return START_STICKY;
@@ -401,6 +410,7 @@ public class ForegroundService extends Service {
                     if (mediaPlayer != null) {
                         intentUpdateBroadcast.putExtra(REPEAT_KEY, isRepeat);
                         intentUpdateBroadcast.putExtra(SHUFFLE_KEY, isShuffle);
+                        intentUpdateBroadcast.putExtra(POS_KEY,mPos );
                         intentUpdateBroadcast.putExtra(SONG_ID, currentSong.getId());
                         intentUpdateBroadcast.putExtra(NAME_SONG, currentSong.getNameVi());
                         intentUpdateBroadcast.putExtra(NAME_ARTIST, currentSong.getArtistName());
