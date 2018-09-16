@@ -26,6 +26,7 @@ import com.example.andeptrai.myapplication.constant.ActionBroadCast;
 import com.example.andeptrai.myapplication.function.RxSearch;
 import com.example.andeptrai.myapplication.function.ShowLog;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -41,15 +42,17 @@ import io.reactivex.schedulers.Schedulers;
 public class CurrentListMusicFragment extends Fragment {
     @BindView(R.id.list_search)
     RecyclerView listSearch;
-
+    ArrayList<String> searchs = new ArrayList<>();
     SearchAdapter adapterSearch;
     @BindView(R.id.searchView)
     SearchView searchView;
 
-    Context mContext;
 
-    int pos = -1,prevPos;
+    Context mContext;
+    long id = -1, prevId = -1;
     boolean isShuffle = false;
+    boolean prevShuffle;
+    boolean isRegister = false;
 
     @Override
     public void onAttach(Context context) {
@@ -79,7 +82,6 @@ public class CurrentListMusicFragment extends Fragment {
         SimpleItemTouchHelperCallback simpleItemTouchHelperCallback = new SimpleItemTouchHelperCallback(adapterSearch);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchHelperCallback);
         itemTouchHelper.attachToRecyclerView(listSearch);
-
 
     }
 
@@ -118,13 +120,17 @@ public class CurrentListMusicFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        register();
+        if (!isRegister) {
+            register();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        unregister();
+        if (isRegister) {
+            unregister();
+        }
     }
 
     private void register() {
@@ -132,10 +138,13 @@ public class CurrentListMusicFragment extends Fragment {
         intentFilter.addAction(ActionBroadCast.UPDATE_LIST_SHUFFLE.getName());
         intentFilter.addAction(ActionBroadCast.CURSEEK.getName());
         mContext.registerReceiver(broadcastReceiver, intentFilter);
+
+        isRegister=true;
     }
 
     private void unregister() {
         mContext.unregisterReceiver(broadcastReceiver);
+        isRegister = false;
     }
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -149,30 +158,31 @@ public class CurrentListMusicFragment extends Fragment {
             if (action.equals(ActionBroadCast.UPDATE_LIST_SHUFFLE.getName())) {
                 boolean prevShuffle = isShuffle;
                 isShuffle = intent.getBooleanExtra(PlayerActivity.UPDATE_SHUFFLE_KEY, isShuffle);
-
                 if (isShuffle != prevShuffle) {
+                    ShowLog.logInfo("compare", isShuffle + " " + prevShuffle);
                     adapterSearch.shuffle(isShuffle);
                     searchView.setQuery("", false);
                     searchView.setIconified(true);
                 }
 
             } else if (action.equals(ActionBroadCast.CURSEEK.getName())) {
-                boolean prevShuffle = isShuffle;
+                prevShuffle = isShuffle;
                 isShuffle = intent.getBooleanExtra(ForegroundService.SHUFFLE_KEY, isShuffle);
                 if (prevShuffle != isShuffle) {
                     adapterSearch.shuffle(isShuffle);
                 }
 
-                prevPos = intent.getIntExtra(ForegroundService.SONG_ID, pos);
-                if (prevPos != pos) {
-                    pos = prevPos;
-                    adapterSearch.setCurPlay(pos);
-                    if(pos<adapterSearch.getItemCount()){
-                        ShowLog.logInfo("cur music fm scrolling",pos);
-                        listSearch.scrollToPosition(pos);
+                prevId = id;
+                id = intent.getLongExtra(ForegroundService.SONG_ID, id);
+                ShowLog.logInfo("current list music fm", prevId + "_" + id+"_"+isShuffle);
+                if (prevId != id) {
+
+                    adapterSearch.setCurPlayId(id);
+                    if (id < adapterSearch.getItemCount()) {
+                        ShowLog.logInfo("cur music fm scrolling", id);
+                        //listSearch.scrollToPosition(id);
                     }
                 }
-
             }
         }
     };

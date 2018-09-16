@@ -228,6 +228,7 @@ public class ForegroundService extends Service {
             sendBroadcast(intentStopBroadcast);
             disposable.dispose();
             stopSelf();
+            return;
 
         }
         do {
@@ -400,7 +401,7 @@ public class ForegroundService extends Service {
                     if (mediaPlayer != null) {
                         intentUpdateBroadcast.putExtra(REPEAT_KEY, isRepeat);
                         intentUpdateBroadcast.putExtra(SHUFFLE_KEY, isShuffle);
-                        intentUpdateBroadcast.putExtra(SONG_ID, mPos);
+                        intentUpdateBroadcast.putExtra(SONG_ID, currentSong.getId());
                         intentUpdateBroadcast.putExtra(NAME_SONG, currentSong.getNameVi());
                         intentUpdateBroadcast.putExtra(NAME_ARTIST, currentSong.getArtistName());
                         intentUpdateBroadcast.putExtra(ALBUM_KEY, currentSong.getAlbumId());
@@ -410,7 +411,6 @@ public class ForegroundService extends Service {
                         } catch (IllegalStateException e) {
                             ShowLog.logInfo("error", e.getMessage());
                         }
-                        ShowLog.logInfo("foresv mPos", mPos);
                         sendBroadcast(intentUpdateBroadcast);
                     }
                 });
