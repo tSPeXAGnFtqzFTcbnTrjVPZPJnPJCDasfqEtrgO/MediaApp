@@ -118,11 +118,11 @@ public class ListMusicFragment extends Fragment {
                 btnAdd.setVisibility(View.GONE);
             }
             songs.clear();
-            for (int i = 0; i < Instance.songList.size(); i++) {
+            for (int i = 0; i < Instance.baseSong.size(); i++) {
                 if (checkList.get(i)) {
                     positionEdit = i;
                     //songs.add(Instance.songList.get(i).getId());
-                    songs.add(Instance.songList.get(i));
+                    songs.add(Instance.baseSong.get(i));
                 }
             }
         };
