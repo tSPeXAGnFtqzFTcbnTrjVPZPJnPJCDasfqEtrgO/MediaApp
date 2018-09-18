@@ -43,6 +43,7 @@ public class ForegroundService extends Service {
     public final static String SHUFFLE_KEY = "SHUFFLE_KEY";
     public final static String REPEAT_KEY = "REPEAT_KEY";
     public final static String ALBUM_KEY = "ALBUM_KEY";
+    public final static String IS_PLAYING_KEY = "IS_PLAYING_KEY";
     public final static String UPDATE_PROGRESS = "UPDATE_PROGRESS";
     public final static String PAUSE = "PAUSE";
     public final static String PLAY = "PLAY";
@@ -408,7 +409,7 @@ public class ForegroundService extends Service {
                 .subscribeOn(Schedulers.computation())
                 .subscribe(lLong -> {
                     if (mediaPlayer != null) {
-                        intentUpdateBroadcast.putExtra(REPEAT_KEY, isRepeat);
+                        intentUpdateBroadcast.putExtra(REPEAT_KEY, typeRepeat);
                         intentUpdateBroadcast.putExtra(SHUFFLE_KEY, isShuffle);
                         intentUpdateBroadcast.putExtra(POS_KEY,mPos );
                         intentUpdateBroadcast.putExtra(SONG_ID, currentSong.getId());
@@ -418,6 +419,7 @@ public class ForegroundService extends Service {
                         try {
                             intentUpdateBroadcast.putExtra(CUR_TIME_KEY, mediaPlayer.getCurrentPosition());
                             intentUpdateBroadcast.putExtra(TOTAL_TIME_KEY, mediaPlayer.getDuration());
+                            intentUpdateBroadcast.putExtra(IS_PLAYING_KEY, mediaPlayer.isPlaying());
                         } catch (IllegalStateException e) {
                             ShowLog.logInfo("error", e.getMessage());
                         }
