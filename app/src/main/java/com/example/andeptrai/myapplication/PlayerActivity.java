@@ -117,9 +117,8 @@ public class PlayerActivity extends AppCompatActivity {
         txtvName.setSelected(true);
         txtvArtist.setSelected(true);
 
-
-        fragments.add(new DiscFragment());
         fragments.add(new CurrentListMusicFragment());
+        fragments.add(new DiscFragment());
 
 
         pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), fragments);
