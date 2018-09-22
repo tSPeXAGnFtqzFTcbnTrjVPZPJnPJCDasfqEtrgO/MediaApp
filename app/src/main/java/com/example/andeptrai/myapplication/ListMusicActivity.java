@@ -51,14 +51,15 @@ public class ListMusicActivity extends AppCompatActivity {
 
     ViewPagerAdapter pagerAdapter;
 
-    Intent playIntent, pauseIntent, nextIntent, startFore,playerIntent;
+    Intent playIntent, pauseIntent, nextIntent, startFore, playerIntent;
     IntentFilter intentFilter;
-    long id = -1,prevId = -1;
+    long id = -1, prevId = -1;
     int pos = 0;
     String nameSong;
     boolean isVisitedBottomPlay = false;
     boolean isRegister = false;
-    boolean isPlaying = false,isStop = false;
+    boolean isPlaying = false, isStop = false;
+    boolean prevPlaying = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,9 +96,9 @@ public class ListMusicActivity extends AppCompatActivity {
 
     }
 
-    private void setUpIntent(){
+    private void setUpIntent() {
 
-        playerIntent = new Intent(this,PlayerActivity.class);
+        playerIntent = new Intent(this, PlayerActivity.class);
         playerIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 
         startFore = new Intent(this, ForegroundService.class);
@@ -120,8 +121,8 @@ public class ListMusicActivity extends AppCompatActivity {
         intentFilter.addAction(ActionBroadCast.STOP.getName());
     }
 
-    private void setClick(){
-        txtvTitle.setOnClickListener(v->{
+    private void setClick() {
+        txtvTitle.setOnClickListener(v -> {
             startActivity(playerIntent);
         });
         btnPlay.setOnClickListener(v -> {
@@ -144,27 +145,37 @@ public class ListMusicActivity extends AppCompatActivity {
         });
 
     }
-    private void update(){
-        ShowLog.logInfo("ListMusic ac","update" );
-        if(!isVisitedBottomPlay){
+
+    private void update(boolean updatePlay) {
+        ShowLog.logInfo("ListMusic ac", "update");
+        if (!isVisitedBottomPlay) {
             isVisitedBottomPlay = true;
             bottomPlayLayout.setVisibility(View.VISIBLE);
         }
         txtvTitle.setText(nameSong);
-    }
-
-    private void register(){
-        if(!isRegister){
-            isRegister = true;
-            registerReceiver(broadcastReceiver,intentFilter );
+        if (updatePlay) {
+            if (isPlaying) {
+                btnPlay.setImageResource(R.drawable.ic_pause);
+            } else {
+                btnPlay.setImageResource(R.drawable.ic_play);
+            }
         }
     }
-    private void unRegister(){
-        if(isRegister){
+
+    private void register() {
+        if (!isRegister) {
+            isRegister = true;
+            registerReceiver(broadcastReceiver, intentFilter);
+        }
+    }
+
+    private void unRegister() {
+        if (isRegister) {
             isRegister = false;
             unregisterReceiver(broadcastReceiver);
         }
     }
+
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -177,13 +188,14 @@ public class ListMusicActivity extends AppCompatActivity {
             if (action.equals(ActionBroadCast.CURSEEK.getName())) {
 
                 prevId = id;
-                id =intent.getLongExtra(ForegroundService.SONG_ID,id );
+                prevPlaying = isPlaying;
+                id = intent.getLongExtra(ForegroundService.SONG_ID, id);
                 nameSong = intent.getStringExtra(ForegroundService.NAME_SONG);
                 isPlaying = intent.getBooleanExtra(ForegroundService.IS_PLAYING_KEY, isPlaying);
                 pos = intent.getIntExtra(ForegroundService.SONG_ID, pos);
 
-                if(prevId != id){
-                    update();
+                if (prevId != id || isPlaying != prevPlaying) {
+                    update(isPlaying != prevPlaying);
                 }
 
             } else if (action.equals(ActionBroadCast.PLAY.getName())) {

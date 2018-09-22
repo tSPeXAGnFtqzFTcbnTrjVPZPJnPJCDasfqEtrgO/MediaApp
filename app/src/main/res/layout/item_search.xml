@@ -7,6 +7,7 @@
     android:padding="@dimen/padding_item">
     <TextView
         android:id="@+id/txtv_name"
+        android:textColor="@color/text"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:textStyle="bold"
@@ -26,6 +27,7 @@
         />
     <TextView
         android:id="@+id/txtv_artist"
+        android:textColor="@color/text"
         android:layout_width="match_parent"
         android:layout_height="0dp"
 

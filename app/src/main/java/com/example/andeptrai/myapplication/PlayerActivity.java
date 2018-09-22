@@ -95,6 +95,9 @@ public class PlayerActivity extends AppCompatActivity {
     boolean isShuffle = false;
     boolean isRepeat = false;
     boolean isStop = false;
+    boolean prevShuffle;
+    int prevRepeat;
+    boolean prevPlaying;
 
     int typeRepeat = 0;
 
@@ -266,9 +269,9 @@ public class PlayerActivity extends AppCompatActivity {
                 nameArtist = intent.getStringExtra(ForegroundService.NAME_ARTIST);
 
 
-                boolean prevShuffle = isShuffle;
-                int prevRepeat = typeRepeat;
-                boolean prevPlaying = isPlaying;
+                 prevShuffle = isShuffle;
+                 prevRepeat = typeRepeat;
+                 prevPlaying = isPlaying;
                 isShuffle = intent.getBooleanExtra(ForegroundService.SHUFFLE_KEY, isShuffle);
                 //isRepeat = intent.getBooleanExtra(ForegroundService.REPEAT_KEY, isRepeat);
                 typeRepeat = intent.getIntExtra(ForegroundService.REPEAT_KEY,typeRepeat );

@@ -10,7 +10,7 @@
     <TextView
         android:id="@+id/txtv_name"
         android:text="ssssssssssssssssss"
-        android:textColor="#454444"
+        android:textColor="@color/text"
         android:textSize="@dimen/title"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -33,7 +33,7 @@
     <TextView
         android:id="@+id/txtv_artist"
         android:text="aaaaaaaaaaaaaaaaaaaaas"
-        android:textColor="#454444"
+        android:textColor="@color/text"
         android:textSize="@dimen/artist"
         android:layout_width="0dp"
         android:layout_height="0dp"
