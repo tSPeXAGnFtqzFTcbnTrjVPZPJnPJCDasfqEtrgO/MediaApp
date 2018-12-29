@@ -15,7 +15,7 @@ public class PlaylistLoader {
 
 
     public static ArrayList<Playlist> load(Context context){
-        ArrayList<Playlist> playlists = new ArrayList<>();
+        ArrayList<Playlist> playlistList = new ArrayList<>();
         Cursor cursor = makeCursor(context);
 
         if(cursor!=null && cursor.moveToFirst()){
@@ -28,12 +28,12 @@ public class PlaylistLoader {
                 Playlist playlist = new Playlist(id,count,name,duration);
 
                 playlist.pushFirstTime(PlaylistSongLoader.getSongFromPlaylist(context,id ));
-                playlists.add(playlist);
+                playlistList.add(playlist);
             }while (cursor.moveToNext());
             cursor.close();
         }
 
-        return playlists;
+        return playlistList;
     }
 
     private static Cursor makeCursor(Context context){

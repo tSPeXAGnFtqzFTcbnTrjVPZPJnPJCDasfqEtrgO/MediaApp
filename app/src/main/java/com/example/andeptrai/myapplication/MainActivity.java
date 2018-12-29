@@ -4,12 +4,12 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 
 import com.example.andeptrai.myapplication.function.ShowLog;
+import com.example.andeptrai.myapplication.function.SongArray;
 import com.example.andeptrai.myapplication.loader.AlbumLoader;
 import com.example.andeptrai.myapplication.loader.PlaylistLoader;
 import com.example.andeptrai.myapplication.loader.PlaylistSongLoader;
@@ -19,18 +19,11 @@ import com.example.andeptrai.myapplication.model.Song;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.functions.Function3;
 import io.reactivex.functions.Function4;
-import io.reactivex.schedulers.Schedulers;
-
-import static com.example.andeptrai.myapplication.Instance.playlists;
 
 enum Type {
     EXTERNAL(),
@@ -90,9 +83,11 @@ public class MainActivity extends AppCompatActivity {
     private void getAll(){
 
         Observable
-                .zip(getObservableListMp3(Type.EXTERNAL), getObservableListMp3(Type.INTERNAL), getObservablePlaylist(),
+                .zip(getObservableListMp3(Type.EXTERNAL), getObservableListMp3(Type.INTERNAL),
+                        getObservablePlaylist(),
                         getObservableAlbum(),
-                        (Function4<ArrayList<Song>, ArrayList<Song>, ArrayList<Playlist>,ArrayList<Album>, Object>)
+                        (Function4<ArrayList<Song>, ArrayList<Song>,
+                                ArrayList<Playlist>,ArrayList<Album>, Object>)
                                 (songs, songs2, playlists,albums) -> new DataZip(songs,songs2,playlists,albums))
                 .subscribe(new Observer<Object>() {
                     @Override
@@ -102,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onNext(Object o) {
-                        ShowLog.logInfo("onnext",null );
                         if(o instanceof DataZip){
                             DataZip dataZip = (DataZip) o;
                             if(dataZip.songs!=null) {
@@ -112,13 +106,15 @@ public class MainActivity extends AppCompatActivity {
                             if(dataZip.songs1!=null) {
                                 Instance.songList.addAll(dataZip.songs1);
                             }
+
+                            SongArray.sort(Instance.songList);
+
                             Instance.baseSong.addAll(Instance.songList);
                             Instance.songShuffleList.addAll(Instance.songList);
                             Collections.shuffle(Instance.songShuffleList);
 
                             Instance.playlists.addAll(dataZip.playlists);
                             Instance.albums.addAll(dataZip.albums);
-
 
 
 
@@ -168,78 +164,80 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-//
-//
-//    private void getListMp3(Type type) {
-//
-//        getObservableListMp3()
-//                .subscribeOn(Schedulers.io())
-//                .map(o -> {
-//                    Log.d("AAA", "thread" + Thread.currentThread().getName());
-//                    if (type.getName().equals(Type.EXTERNAL.getName())) {
-//                        return ScanFileMp3.queryFileExternal(getApplicationContext());
-//                    } else{
-//                        return ScanFileMp3.queryFileInternal(getApplicationContext());
-//                    }
-//                })
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Observer<List<Song>>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(List<Song> songs) {
-//                        if(songs!=null) {
-//                            Instance.songList.addAll(songs);
-//                            Instance.songShuffleList.addAll(songs);
-//                            Collections.shuffle(Instance.songShuffleList);
-//                        }
-//
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//
-//                    }
-//                });
-//
-//    }
-//    private void getPlaylist(){
-//        getObservablePlaylist()
-//                .subscribeOn(Schedulers.io())
-//                .map(o-> loadPlaylist())
-//                .subscribeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Observer<ArrayList<Playlist>>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(ArrayList<Playlist> playlists) {
-//                        Instance.playlists.clear();
-//                        Instance.playlists.addAll(playlists);
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//
-//                    }
-//                });
-//
-//    }
+
+    /*
+
+    private void getListMp3(Type type) {
+
+        getObservableListMp3()
+                .subscribeOn(Schedulers.io())
+                .map(o -> {
+                    Log.d("AAA", "thread" + Thread.currentThread().getName());
+                    if (type.getName().equals(Type.EXTERNAL.getName())) {
+                        return ScanFileMp3.queryFileExternal(getApplicationContext());
+                    } else{
+                        return ScanFileMp3.queryFileInternal(getApplicationContext());
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Song>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<Song> songs) {
+                        if(songs!=null) {
+                            Instance.songList.addAll(songs);
+                            Instance.songShuffleList.addAll(songs);
+                            Collections.shuffle(Instance.songShuffleList);
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+    }
+    private void getPlaylist(){
+        getObservablePlaylist()
+                .subscribeOn(Schedulers.io())
+                .map(o-> loadPlaylist())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ArrayList<Playlist>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<Playlist> playlists) {
+                        Instance.playlists.clear();
+                        Instance.playlists.addAll(playlists);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+    }
+    */
     private ArrayList<Playlist> loadPlaylist() {
         ArrayList<Playlist> playlists = PlaylistLoader.load(getApplicationContext());
         if (playlists != null) {

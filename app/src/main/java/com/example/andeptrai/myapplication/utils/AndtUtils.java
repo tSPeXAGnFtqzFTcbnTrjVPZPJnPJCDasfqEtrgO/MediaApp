@@ -38,7 +38,7 @@ public class AndtUtils {
                 null,
                 null);
 
-        if (cursor.moveToFirst()) {
+        if (cursor!=null && cursor.moveToFirst()) {
             long count = cursor.getLong( 0);
             cursor.close();
 

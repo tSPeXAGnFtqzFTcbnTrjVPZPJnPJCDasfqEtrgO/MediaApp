@@ -1,6 +1,7 @@
 package com.example.andeptrai.myapplication.dialog;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -46,8 +47,15 @@ public class ShowDialogEditSong extends DialogFragment {
     @BindView(R.id.btn_cancel)
     Button btnCancel;
 
+    Context context;
     Song song;
     int position;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
 
     public static ShowDialogEditSong newInstance(Song song, int position) {
         ShowDialogEditSong dialog = new ShowDialogEditSong();
@@ -118,22 +126,22 @@ public class ShowDialogEditSong extends DialogFragment {
             String album = editAlbum.getText().toString().trim();
 
             if (!title.isEmpty() && title.compareTo(song.getNameVi()) != 0) {
-                if(AndtUtils.renameSong(getContext(), song.getId(), title)){
+                if(AndtUtils.renameSong(this.context, song.getId(), title)){
                     Instance.baseSong.get(position).setNameVi(title);
-                    Intent intent = new Intent();
-                    intent.setAction(ListMusicFragment.actionNotify);
-                    getContext().sendBroadcast(intent);
                 }
             }
             if (!artist.isEmpty() && artist.compareTo(song.getAlbumName()) != 0) {
 
-                if(AndtUtils.renameArtist(getContext(), song.getArtistId(), artist)){
+                if(AndtUtils.renameArtist(this.context, song.getArtistId(), artist)){
                     Instance.baseSong.get(position).setArtistName(artist);
                 }
             }
             if (!album.isEmpty() && album.compareTo(song.getAlbumName()) != 0) {
-                AndtUtils.renameAlbum(getContext(), song.getAlbumId(), album);
+                AndtUtils.renameAlbum(this.context, song.getAlbumId(), album);
             }
+            Intent intent = new Intent();
+            intent.setAction(ListMusicFragment.actionNotify);
+            this.context.sendBroadcast(intent);
             getDialog().cancel();
         });
     }

@@ -20,10 +20,10 @@ public class AlbumLoader {
 
         Cursor cursor = makeAlbumCursor(context);
 
-        if(cursor == null) return null;
+        if(cursor == null) return albums;
         if(cursor.getCount() == 0){
             cursor.close();
-            return null;
+            return albums;
         }
 
         if(cursor.moveToFirst()){

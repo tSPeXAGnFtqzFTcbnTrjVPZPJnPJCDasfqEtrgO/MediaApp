@@ -29,7 +29,8 @@
         app:layout_constraintTop_toTopOf="@id/txtv_name"
         app:layout_constraintBottom_toBottomOf="@id/txtv_name"
         app:layout_constraintLeft_toRightOf="@id/txtv_name"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        android:inputType="textCapWords"/>
     <TextView
         android:id="@+id/txtv_artist"
         android:text="Artist"
@@ -54,7 +55,8 @@
         app:layout_constraintTop_toTopOf="@id/txtv_artist"
         app:layout_constraintBottom_toBottomOf="@id/txtv_artist"
         app:layout_constraintLeft_toRightOf="@id/txtv_artist"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        android:inputType="textCapWords"/>
     <TextView
         android:id="@+id/txtv_album"
         android:text="Album"
@@ -79,7 +81,8 @@
         app:layout_constraintTop_toTopOf="@id/txtv_album"
         app:layout_constraintBottom_toBottomOf="@id/txtv_album"
         app:layout_constraintLeft_toRightOf="@id/txtv_album"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        android:inputType="textCapWords"/>
 
     <Button
         android:id="@+id/btn_ok"
