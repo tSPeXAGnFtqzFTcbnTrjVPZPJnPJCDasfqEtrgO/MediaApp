@@ -7,12 +7,10 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -22,8 +20,6 @@ import com.example.andeptrai.myapplication.R;
 import com.example.andeptrai.myapplication.constant.ActionBroadCast;
 import com.example.andeptrai.myapplication.function.ShowLog;
 import com.example.andeptrai.myapplication.services.ForegroundService;
-
-import org.w3c.dom.Text;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,7 +37,7 @@ public class DiscFragment extends Fragment {
 
     boolean isRegister = false;
     long albumId = -1;
-    long prevId = albumId;
+    String prevTitle = "";
     String title = "", artist = "";
 
     @Nullable
@@ -87,13 +83,13 @@ public class DiscFragment extends Fragment {
 
             if (action.equals(ActionBroadCast.CURSEEK.getName())) {
 
-                prevId = albumId;
+                prevTitle = title;
                 albumId = intent.getLongExtra(ForegroundService.ALBUM_KEY, albumId);
                 title = intent.getStringExtra(ForegroundService.NAME_SONG);
                 artist = intent.getStringExtra(ForegroundService.NAME_ARTIST);
 
 
-                if (albumId != prevId) {
+                if (title != prevTitle) {
                     if (Instance.mapImageAlbum.containsKey(albumId)) {
                         imageView.setImageBitmap(Instance.mapImageAlbum.get(albumId));
 

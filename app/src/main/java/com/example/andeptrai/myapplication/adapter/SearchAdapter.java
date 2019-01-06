@@ -90,11 +90,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
     public boolean onItemMove(int from, int to) {
         if (from < to) {
             for (int i = from; i < to; i++) {
-                Collections.swap(songs, i, i + 1);
+                Collections.swap(this.songs, i, i + 1);
             }
         } else {
             for (int i = from; i > to; i--) {
-                Collections.swap(songs, i, i - 1);
+                Collections.swap(this.songs, i, i - 1);
             }
         }
 
@@ -104,7 +104,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 
     @Override
     public void onItemDismiss(int position) {
-        songs.remove(position);
+        this.songs.remove(position);
         notifyItemRemoved(position);
         notifyDataSetChanged();
     }
